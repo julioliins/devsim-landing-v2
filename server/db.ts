@@ -1,6 +1,6 @@
-import { eq } from "drizzle-orm";
+import { eq, and } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
-import { InsertUser, users } from "../drizzle/schema";
+import { InsertUser, users, userProfiles, userSessions, passwordResets, userConsents, supportTickets, dataExportRequests, faqEntries, appRatings } from "../drizzle/schema";
 import { ENV } from './_core/env';
 
 let _db: ReturnType<typeof drizzle> | null = null;
@@ -89,4 +89,108 @@ export async function getUserByOpenId(openId: string) {
   return result.length > 0 ? result[0] : undefined;
 }
 
-// TODO: add feature queries here as your schema grows.
+export async function getUserById(id: number) {
+  const db = await getDb();
+  if (!db) return undefined;
+  const result = await db.select().from(users).where(eq(users.id, id)).limit(1);
+  return result.length > 0 ? result[0] : undefined;
+}
+
+export async function getUserProfile(userId: number) {
+  const db = await getDb();
+  if (!db) return undefined;
+  const result = await db.select().from(userProfiles).where(eq(userProfiles.userId, userId)).limit(1);
+  return result.length > 0 ? result[0] : undefined;
+}
+
+export async function updateUserProfile(userId: number, data: Partial<typeof userProfiles.$inferInsert>) {
+  const db = await getDb();
+  if (!db) return undefined;
+  
+  const existing = await getUserProfile(userId);
+  if (!existing) {
+    return await db.insert(userProfiles).values({ userId, ...data });
+  }
+  
+  return await db.update(userProfiles)
+    .set({ ...data, updatedAt: new Date() })
+    .where(eq(userProfiles.userId, userId));
+}
+
+export async function createPasswordReset(userId: number, token: string, expiresAt: Date) {
+  const db = await getDb();
+  if (!db) return undefined;
+  return await db.insert(passwordResets).values({ userId, token, expiresAt });
+}
+
+export async function getPasswordResetByToken(token: string) {
+  const db = await getDb();
+  if (!db) return undefined;
+  const result = await db.select().from(passwordResets).where(eq(passwordResets.token, token)).limit(1);
+  return result.length > 0 ? result[0] : undefined;
+}
+
+export async function markPasswordResetAsUsed(id: number) {
+  const db = await getDb();
+  if (!db) return undefined;
+  return await db.update(passwordResets).set({ usedAt: new Date() }).where(eq(passwordResets.id, id));
+}
+
+export async function getUserConsents(userId: number) {
+  const db = await getDb();
+  if (!db) return [];
+  return await db.select().from(userConsents).where(eq(userConsents.userId, userId));
+}
+
+export async function upsertUserConsent(userId: number, consentType: string, given: boolean, version: string) {
+  const db = await getDb();
+  if (!db) return undefined;
+  
+  const existing = await db.select().from(userConsents)
+    .where(and(eq(userConsents.userId, userId), eq(userConsents.consentType, consentType as any)))
+    .limit(1);
+  
+  if (existing.length > 0) {
+    return await db.update(userConsents)
+      .set({ given, version, updatedAt: new Date() })
+      .where(eq(userConsents.id, existing[0].id));
+  }
+  
+  return await db.insert(userConsents).values({ userId, consentType: consentType as any, given, version });
+}
+
+export async function createSupportTicket(userId: number, subject: string, message: string, channel: string) {
+  const db = await getDb();
+  if (!db) return undefined;
+  return await db.insert(supportTickets).values({ userId, subject, message, channel: channel as any });
+}
+
+export async function getUserSupportTickets(userId: number) {
+  const db = await getDb();
+  if (!db) return [];
+  return await db.select().from(supportTickets).where(eq(supportTickets.userId, userId));
+}
+
+export async function getFaqEntries() {
+  const db = await getDb();
+  if (!db) return [];
+  return await db.select().from(faqEntries).orderBy(faqEntries.order);
+}
+
+export async function createAppRating(userId: number, rating: number, comment?: string) {
+  const db = await getDb();
+  if (!db) return undefined;
+  return await db.insert(appRatings).values({ userId, rating, comment });
+}
+
+export async function createDataExportRequest(userId: number) {
+  const db = await getDb();
+  if (!db) return undefined;
+  return await db.insert(dataExportRequests).values({ userId, status: 'pending' });
+}
+
+export async function getUserDataExportRequests(userId: number) {
+  const db = await getDb();
+  if (!db) return [];
+  return await db.select().from(dataExportRequests).where(eq(dataExportRequests.userId, userId));
+}
