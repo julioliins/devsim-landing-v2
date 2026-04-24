@@ -7,6 +7,10 @@ import { ThemeProvider } from "./contexts/ThemeContext";
 import Home from "./pages/Home";
 import Auth from "./pages/Auth";
 import Dashboard from "./pages/Dashboard";
+import CareerSelection from "./pages/CareerSelection";
+import MethodologySelection from "./pages/MethodologySelection";
+import SimulatorEnvironment from "./pages/SimulatorEnvironment";
+import SessionSummary from "./pages/SessionSummary";
 
 function Router() {
   // make sure to consider if you need authentication for certain routes
@@ -16,6 +20,10 @@ function Router() {
       <Route path="/auth/:step" component={Auth} />
       <Route path="/auth" component={Auth} />
       <Route path="/dashboard" component={Dashboard} />
+      <Route path="/simulator/careers" component={CareerSelection} />
+      <Route path="/simulator/methodology" component={MethodologySelection} />
+      <Route path="/simulator/environment" component={SimulatorEnvironment} />
+      <Route path="/simulator/summary" component={SessionSummary} />
       <Route path="/404" component={NotFound} />
       {/* Final fallback route */}
       <Route component={NotFound} />

@@ -164,6 +164,172 @@ export const appRouter = router({
       }),
   }),
 
+  // Simulator
+  simulator: router({
+    getAllCareers: publicProcedure.query(async () => {
+      return await db.getAllCareers();
+    }),
+
+    getCareerById: publicProcedure
+      .input(z.object({ careerId: z.number() }))
+      .query(async ({ input }) => {
+        return await db.getCareerById(input.careerId);
+      }),
+
+    startSession: protectedProcedure
+      .input(
+        z.object({
+          careerId: z.number(),
+          methodology: z.enum(["agile", "waterfall"]),
+        })
+      )
+      .mutation(async ({ ctx, input }) => {
+        const session = await db.createSimulationSession(
+          ctx.user.id,
+          input.careerId,
+          input.methodology
+        );
+        return { success: true, sessionId: (session as any).insertId };
+      }),
+
+    getSession: protectedProcedure
+      .input(z.object({ sessionId: z.number() }))
+      .query(async ({ ctx, input }) => {
+        const session = await db.getSimulationSession(input.sessionId);
+        if (!session || session.userId !== ctx.user.id) {
+          throw new TRPCError({ code: "FORBIDDEN" });
+        }
+        return session;
+      }),
+
+    getUserSessions: protectedProcedure.query(async ({ ctx }) => {
+      return await db.getUserSimulationSessions(ctx.user.id);
+    }),
+
+    updateSessionStatus: protectedProcedure
+      .input(
+        z.object({
+          sessionId: z.number(),
+          status: z.enum(["active", "paused", "completed", "abandoned"]),
+          score: z.number().optional(),
+        })
+      )
+      .mutation(async ({ ctx, input }) => {
+        const session = await db.getSimulationSession(input.sessionId);
+        if (!session || session.userId !== ctx.user.id) {
+          throw new TRPCError({ code: "FORBIDDEN" });
+        }
+        await db.updateSimulationSessionStatus(
+          input.sessionId,
+          input.status,
+          input.score
+        );
+        return { success: true };
+      }),
+
+    getNpcsByCareer: publicProcedure
+      .input(z.object({ careerId: z.number() }))
+      .query(async ({ input }) => {
+        return await db.getNpcsByCareer(input.careerId);
+      }),
+
+    createTask: protectedProcedure
+      .input(
+        z.object({
+          sessionId: z.number(),
+          npcId: z.number(),
+          title: z.string(),
+          description: z.string(),
+          methodology: z.enum(["agile", "waterfall"]),
+          difficulty: z.enum(["easy", "medium", "hard"]),
+          points: z.number(),
+        })
+      )
+      .mutation(async ({ ctx, input }) => {
+        const session = await db.getSimulationSession(input.sessionId);
+        if (!session || session.userId !== ctx.user.id) {
+          throw new TRPCError({ code: "FORBIDDEN" });
+        }
+        const task = await db.createSimulationTask(
+          input.sessionId,
+          input.npcId,
+          input.title,
+          input.description,
+          input.methodology,
+          input.difficulty,
+          input.points
+        );
+        return { success: true, taskId: (task as any).insertId };
+      }),
+
+    getSessionTasks: protectedProcedure
+      .input(z.object({ sessionId: z.number() }))
+      .query(async ({ ctx, input }) => {
+        const session = await db.getSimulationSession(input.sessionId);
+        if (!session || session.userId !== ctx.user.id) {
+          throw new TRPCError({ code: "FORBIDDEN" });
+        }
+        return await db.getSessionTasks(input.sessionId);
+      }),
+
+    updateTaskStatus: protectedProcedure
+      .input(
+        z.object({
+          taskId: z.number(),
+          status: z.enum(["pending", "in_progress", "completed", "failed"]),
+        })
+      )
+      .mutation(async ({ ctx, input }) => {
+        await db.updateTaskStatus(input.taskId, input.status);
+        return { success: true };
+      }),
+
+    getCuriosities: publicProcedure
+      .input(z.object({ careerId: z.number() }))
+      .query(async ({ input }) => {
+        return await db.getCuriosities(input.careerId);
+      }),
+
+    createSessionSummary: protectedProcedure
+      .input(
+        z.object({
+          sessionId: z.number(),
+          totalTasks: z.number(),
+          completedTasks: z.number(),
+          totalPoints: z.number(),
+          earnedPoints: z.number(),
+          topicsLearned: z.string(),
+          feedback: z.string().optional(),
+        })
+      )
+      .mutation(async ({ ctx, input }) => {
+        const session = await db.getSimulationSession(input.sessionId);
+        if (!session || session.userId !== ctx.user.id) {
+          throw new TRPCError({ code: "FORBIDDEN" });
+        }
+        await db.createSessionSummary(
+          input.sessionId,
+          input.totalTasks,
+          input.completedTasks,
+          input.totalPoints,
+          input.earnedPoints,
+          input.topicsLearned,
+          input.feedback
+        );
+        return { success: true };
+      }),
+
+    getSessionSummary: protectedProcedure
+      .input(z.object({ sessionId: z.number() }))
+      .query(async ({ ctx, input }) => {
+        const session = await db.getSimulationSession(input.sessionId);
+        if (!session || session.userId !== ctx.user.id) {
+          throw new TRPCError({ code: "FORBIDDEN" });
+        }
+        return await db.getSessionSummary(input.sessionId);
+      }),
+  }),
+
   // Support
   support: router({
     submitTicket: protectedProcedure

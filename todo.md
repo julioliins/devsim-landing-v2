@@ -69,3 +69,17 @@
 - [x] Criar checkpoint final
 - [x] Preparar arquivos para upload no GitHub
 - [x] Documentar funcionalidades implementadas
+
+## Etapa 3 - Simuladores de Carreiras
+- [x] Página de Seleção de Carreira (Dev, Tester, Analista, DevOps)
+- [x] Página de Seleção de Metodologia (Ágil ou Cascata)
+- [x] Ambiente de Simulação com Chat NPC
+- [x] Tarefas Dinâmicas por Carreira
+- [x] Carrossel de Curiosidades
+- [x] Resumo de Sessão com Estatísticas
+- [x] Histórico de Simulações no Dashboard
+- [x] Procedures tRPC para Simuladores (15 procedures)
+- [x] Banco de Dados com Tabelas de Simulação (7 tabelas)
+- [x] Testes Unitários para Simuladores (8 testes)
+- [x] Integração com Sistema de Autenticação
+- [x] Proteção de Rotas para Simuladores

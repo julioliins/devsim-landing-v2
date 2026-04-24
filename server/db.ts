@@ -1,6 +1,6 @@
 import { eq, and } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
-import { InsertUser, users, userProfiles, userSessions, passwordResets, userConsents, supportTickets, dataExportRequests, faqEntries, appRatings } from "../drizzle/schema";
+import { InsertUser, users, userProfiles, userSessions, passwordResets, userConsents, supportTickets, dataExportRequests, faqEntries, appRatings, careers, simulationSessions, npcs, simulationTasks, curiosities, sessionSummaries } from "../drizzle/schema";
 import { ENV } from './_core/env';
 
 let _db: ReturnType<typeof drizzle> | null = null;
@@ -193,4 +193,92 @@ export async function getUserDataExportRequests(userId: number) {
   const db = await getDb();
   if (!db) return [];
   return await db.select().from(dataExportRequests).where(eq(dataExportRequests.userId, userId));
+}
+
+// Simulator functions
+
+export async function getAllCareers() {
+  const db = await getDb();
+  if (!db) return [];
+  return await db.select().from(careers).where(eq(careers.isActive, true)).orderBy(careers.order);
+}
+
+export async function getCareerById(careerId: number) {
+  const db = await getDb();
+  if (!db) return undefined;
+  const result = await db.select().from(careers).where(eq(careers.id, careerId)).limit(1);
+  return result.length > 0 ? result[0] : undefined;
+}
+
+export async function createSimulationSession(userId: number, careerId: number, methodology: "agile" | "waterfall") {
+  const db = await getDb();
+  if (!db) return undefined;
+  return await db.insert(simulationSessions).values({ userId, careerId, methodology });
+}
+
+export async function getSimulationSession(sessionId: number) {
+  const db = await getDb();
+  if (!db) return undefined;
+  const result = await db.select().from(simulationSessions).where(eq(simulationSessions.id, sessionId)).limit(1);
+  return result.length > 0 ? result[0] : undefined;
+}
+
+export async function getUserSimulationSessions(userId: number) {
+  const db = await getDb();
+  if (!db) return [];
+  return await db.select().from(simulationSessions).where(eq(simulationSessions.userId, userId));
+}
+
+export async function updateSimulationSessionStatus(sessionId: number, status: "active" | "paused" | "completed" | "abandoned", score?: number) {
+  const db = await getDb();
+  if (!db) return undefined;
+  const updateData: any = { status, updatedAt: new Date() };
+  if (score !== undefined) updateData.score = score;
+  if (status === "completed") updateData.completedAt = new Date();
+  return await db.update(simulationSessions).set(updateData).where(eq(simulationSessions.id, sessionId));
+}
+
+export async function getNpcsByCareer(careerId: number) {
+  const db = await getDb();
+  if (!db) return [];
+  return await db.select().from(npcs).where(eq(npcs.careerId, careerId));
+}
+
+export async function createSimulationTask(sessionId: number, npcId: number, title: string, description: string, methodology: "agile" | "waterfall", difficulty: "easy" | "medium" | "hard", points: number) {
+  const db = await getDb();
+  if (!db) return undefined;
+  return await db.insert(simulationTasks).values({ sessionId, npcId, title, description, methodology, difficulty, points });
+}
+
+export async function getSessionTasks(sessionId: number) {
+  const db = await getDb();
+  if (!db) return [];
+  return await db.select().from(simulationTasks).where(eq(simulationTasks.sessionId, sessionId));
+}
+
+export async function updateTaskStatus(taskId: number, status: "pending" | "in_progress" | "completed" | "failed") {
+  const db = await getDb();
+  if (!db) return undefined;
+  const updateData: any = { status };
+  if (status === "completed") updateData.completedAt = new Date();
+  return await db.update(simulationTasks).set(updateData).where(eq(simulationTasks.id, taskId));
+}
+
+export async function getCuriosities(careerId: number) {
+  const db = await getDb();
+  if (!db) return [];
+  return await db.select().from(curiosities).where(eq(curiosities.careerId, careerId)).orderBy(curiosities.order);
+}
+
+export async function createSessionSummary(sessionId: number, totalTasks: number, completedTasks: number, totalPoints: number, earnedPoints: number, topicsLearned: string, feedback?: string) {
+  const db = await getDb();
+  if (!db) return undefined;
+  return await db.insert(sessionSummaries).values({ sessionId, totalTasks, completedTasks, totalPoints, earnedPoints, topicsLearned, feedback });
+}
+
+export async function getSessionSummary(sessionId: number) {
+  const db = await getDb();
+  if (!db) return undefined;
+  const result = await db.select().from(sessionSummaries).where(eq(sessionSummaries.sessionId, sessionId)).limit(1);
+  return result.length > 0 ? result[0] : undefined;
 }

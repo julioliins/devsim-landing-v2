@@ -159,6 +159,113 @@ export type AppRating = typeof appRatings.$inferSelect;
 export type InsertAppRating = typeof appRatings.$inferInsert;
 
 /**
+ * Careers available in the simulator
+ */
+export const careers = mysqlTable("careers", {
+  id: int("id").autoincrement().primaryKey(),
+  name: varchar("name", { length: 100 }).notNull(),
+  description: text("description"),
+  icon: varchar("icon", { length: 255 }),
+  color: varchar("color", { length: 20 }),
+  order: int("order").default(0),
+  isActive: boolean("isActive").default(true),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type Career = typeof careers.$inferSelect;
+export type InsertCareer = typeof careers.$inferInsert;
+
+/**
+ * Simulation sessions - track user simulations
+ */
+export const simulationSessions = mysqlTable("simulation_sessions", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull(),
+  careerId: int("careerId").notNull(),
+  methodology: mysqlEnum("methodology", ["agile", "waterfall"]).notNull(),
+  status: mysqlEnum("status", ["active", "paused", "completed", "abandoned"]).default("active"),
+  score: int("score"),
+  startedAt: timestamp("startedAt").defaultNow().notNull(),
+  completedAt: timestamp("completedAt"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type SimulationSession = typeof simulationSessions.$inferSelect;
+export type InsertSimulationSession = typeof simulationSessions.$inferInsert;
+
+/**
+ * NPCs (Non-Player Characters) - fictional figures in simulations
+ */
+export const npcs = mysqlTable("npcs", {
+  id: int("id").autoincrement().primaryKey(),
+  careerId: int("careerId").notNull(),
+  name: varchar("name", { length: 100 }).notNull(),
+  role: varchar("role", { length: 100 }).notNull(),
+  avatar: varchar("avatar", { length: 255 }),
+  personality: text("personality"),
+  description: text("description"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type Npc = typeof npcs.$inferSelect;
+export type InsertNpc = typeof npcs.$inferInsert;
+
+/**
+ * Tasks assigned during simulations
+ */
+export const simulationTasks = mysqlTable("simulation_tasks", {
+  id: int("id").autoincrement().primaryKey(),
+  sessionId: int("sessionId").notNull(),
+  npcId: int("npcId").notNull(),
+  title: varchar("title", { length: 255 }).notNull(),
+  description: longtext("description"),
+  methodology: mysqlEnum("methodology", ["agile", "waterfall"]).notNull(),
+  status: mysqlEnum("status", ["pending", "in_progress", "completed", "failed"]).default("pending"),
+  difficulty: mysqlEnum("difficulty", ["easy", "medium", "hard"]).default("medium"),
+  points: int("points").default(0),
+  completedAt: timestamp("completedAt"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type SimulationTask = typeof simulationTasks.$inferSelect;
+export type InsertSimulationTask = typeof simulationTasks.$inferInsert;
+
+/**
+ * Curiosities/Fun facts about careers
+ */
+export const curiosities = mysqlTable("curiosities", {
+  id: int("id").autoincrement().primaryKey(),
+  careerId: int("careerId").notNull(),
+  title: varchar("title", { length: 255 }).notNull(),
+  content: text("content"),
+  category: varchar("category", { length: 100 }),
+  icon: varchar("icon", { length: 255 }),
+  order: int("order").default(0),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type Curiosity = typeof curiosities.$inferSelect;
+export type InsertCuriosity = typeof curiosities.$inferInsert;
+
+/**
+ * Session summaries - what was covered in each simulation
+ */
+export const sessionSummaries = mysqlTable("session_summaries", {
+  id: int("id").autoincrement().primaryKey(),
+  sessionId: int("sessionId").notNull().unique(),
+  totalTasks: int("totalTasks").default(0),
+  completedTasks: int("completedTasks").default(0),
+  totalPoints: int("totalPoints").default(0),
+  earnedPoints: int("earnedPoints").default(0),
+  topicsLearned: longtext("topicsLearned"),
+  feedback: text("feedback"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type SessionSummary = typeof sessionSummaries.$inferSelect;
+export type InsertSessionSummary = typeof sessionSummaries.$inferInsert;
+
+/**
  * Relations
  */
 export const usersRelations = relations(users, ({ one, many }) => ({
