@@ -12,7 +12,7 @@ export default function PostLoginSplash() {
       setProgress((prev) => {
         if (prev >= 100) {
           clearInterval(interval);
-          setLocation("/app");
+          setLocation("/my-simulations");
           return 100;
         }
         return prev + Math.random() * 30;

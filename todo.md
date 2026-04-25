@@ -107,3 +107,7 @@
 - [x] Integrar seleção de carreira no dashboard
 - [x] Integrar seleção de metodologia (Ágil/Cascata)
 - [x] Todos os 39 testes continuam passando
+
+
+## Ajuste de Fluxo Pós-Splash
+- [x] Redirecionar para /my-simulations após splash (não para /app)
