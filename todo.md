@@ -142,3 +142,9 @@
 - [x] Trocar label "Navigation" por "Menu"
 - [x] Tornar item "Simuladores" clicável (link para /career-selection)
 - [x] CareerSelection envolvida em DashboardLayout para mostrar sidebar
+
+
+## Limpeza UI - Remover Sessões Ativas
+- [x] Remover sub-aba "Sessões Ativas" do SecuritySettings
+- [x] Remover seção/card de Sessões Ativas
+- [x] 63 testes passando após simplificação
