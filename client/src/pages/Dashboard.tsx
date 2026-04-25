@@ -1,21 +1,41 @@
 import { useAuth } from "@/_core/hooks/useAuth";
-import { useLocation } from "wouter";
-import { useEffect } from "react";
+import { useLocation, useSearch } from "wouter";
+import { useEffect, useState } from "react";
 import DashboardLayout from "@/components/DashboardLayout";
 import ProfileSettings from "@/components/settings/ProfileSettings";
 import SecuritySettings from "@/components/settings/SecuritySettings";
 import PrivacySettings from "@/components/settings/PrivacySettings";
 import SupportSettings from "@/components/settings/SupportSettings";
 
+type TabId = "profile" | "security" | "privacy" | "support";
+
 export default function Dashboard() {
   const { isAuthenticated, loading } = useAuth();
-  const [location, setLocation] = useLocation();
+  const [, setLocation] = useLocation();
+  const search = useSearch();
+
+  // Get initial tab from URL search params
+  const getInitialTab = (): TabId => {
+    const params = new URLSearchParams(search);
+    const tabParam = params.get("tab");
+    if (tabParam === "security" || tabParam === "privacy" || tabParam === "support" || tabParam === "profile") {
+      return tabParam;
+    }
+    return "profile";
+  };
+
+  const [activeTab, setActiveTab] = useState<TabId>(getInitialTab());
 
   useEffect(() => {
     if (!loading && !isAuthenticated) {
       setLocation("/auth/login");
     }
   }, [isAuthenticated, loading, setLocation]);
+
+  // Update tab when URL changes
+  useEffect(() => {
+    setActiveTab(getInitialTab());
+  }, [search]);
 
   if (loading) {
     return (
@@ -34,7 +54,17 @@ export default function Dashboard() {
     return null;
   }
 
-  const tab = location.split("?tab=")[1] || "profile";
+  const handleTabChange = (tabId: TabId) => {
+    setActiveTab(tabId);
+    setLocation(`/dashboard?tab=${tabId}`);
+  };
+
+  const tabs: Array<{ id: TabId; label: string }> = [
+    { id: "profile", label: "Perfil" },
+    { id: "security", label: "Segurança" },
+    { id: "privacy", label: "Privacidade/LGPD" },
+    { id: "support", label: "Suporte" },
+  ];
 
   return (
     <DashboardLayout>
@@ -47,17 +77,12 @@ export default function Dashboard() {
 
         {/* Tabs Navigation */}
         <div className="flex gap-4 border-b border-border overflow-x-auto">
-          {[
-            { id: "profile", label: "Perfil" },
-            { id: "security", label: "Segurança" },
-            { id: "privacy", label: "Privacidade/LGPD" },
-            { id: "support", label: "Suporte" },
-          ].map((tabItem) => (
+          {tabs.map((tabItem) => (
             <button
               key={tabItem.id}
-              onClick={() => setLocation(`/dashboard?tab=${tabItem.id}`)}
+              onClick={() => handleTabChange(tabItem.id)}
               className={`px-4 py-3 font-medium border-b-2 transition whitespace-nowrap ${
-                tab === tabItem.id
+                activeTab === tabItem.id
                   ? "border-primary text-primary"
                   : "border-transparent text-muted-foreground hover:text-foreground"
               }`}
@@ -68,11 +93,11 @@ export default function Dashboard() {
         </div>
 
         {/* Tab Content */}
-        <div>
-          {tab === "profile" && <ProfileSettings />}
-          {tab === "security" && <SecuritySettings />}
-          {tab === "privacy" && <PrivacySettings />}
-          {tab === "support" && <SupportSettings />}
+        <div className="mt-6">
+          {activeTab === "profile" && <ProfileSettings />}
+          {activeTab === "security" && <SecuritySettings />}
+          {activeTab === "privacy" && <PrivacySettings />}
+          {activeTab === "support" && <SupportSettings />}
         </div>
       </div>
     </DashboardLayout>
