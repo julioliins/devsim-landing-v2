@@ -7,19 +7,25 @@ export default function PostLoginSplash() {
   const { user } = useAuth();
   const [progress, setProgress] = useState(0);
 
+  // Animate progress bar
   useEffect(() => {
     const interval = setInterval(() => {
       setProgress((prev) => {
-        if (prev >= 100) {
-          clearInterval(interval);
-          setLocation("/my-simulations");
-          return 100;
-        }
-        return prev + Math.random() * 30;
+        const next = prev + Math.random() * 25;
+        return next >= 100 ? 100 : next;
       });
-    }, 300);
+    }, 200);
 
     return () => clearInterval(interval);
+  }, []);
+
+  // Navigate after splash duration (2.5 seconds)
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setLocation("/my-simulations");
+    }, 2500);
+
+    return () => clearTimeout(timer);
   }, [setLocation]);
 
   return (
@@ -37,13 +43,13 @@ export default function PostLoginSplash() {
         {/* Welcome Message */}
         <div className="space-y-2">
           <h1 className="text-3xl font-bold text-foreground">
-            Bem-vindo, {user?.name?.split(" ")[0]}!
+            Bem-vindo{user?.name ? `, ${user.name.split(" ")[0]}` : ""}!
           </h1>
           <p className="text-muted-foreground">Preparando seu simulador...</p>
         </div>
 
         {/* Progress Bar */}
-        <div className="w-64 h-2 bg-border rounded-full overflow-hidden">
+        <div className="w-64 h-2 bg-border rounded-full overflow-hidden mx-auto">
           <div
             className="h-full bg-primary transition-all duration-300 ease-out"
             style={{ width: `${Math.min(progress, 100)}%` }}
@@ -51,7 +57,7 @@ export default function PostLoginSplash() {
         </div>
 
         {/* Loading Text */}
-        <p className="text-sm text-muted-foreground">{Math.round(progress)}%</p>
+        <p className="text-sm text-muted-foreground">{Math.round(Math.min(progress, 100))}%</p>
 
         {/* Animated Dots */}
         <div className="flex justify-center gap-2">
