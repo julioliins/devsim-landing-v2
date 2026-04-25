@@ -12,6 +12,8 @@ import MethodologySelection from "./pages/MethodologySelection";
 import SimulatorEnvironment from "./pages/SimulatorEnvironment";
 import SessionSummary from "./pages/SessionSummary";
 import MySimulations from "./pages/MySimulations";
+import PostLoginSplash from "./components/PostLoginSplash";
+import AppDashboard from "./pages/AppDashboard";
 
 function Router() {
   return (
@@ -25,6 +27,8 @@ function Router() {
       <Route path="/simulator" component={SimulatorEnvironment} />
       <Route path="/session-summary" component={SessionSummary} />
       <Route path="/my-simulations" component={MySimulations} />
+      <Route path="/splash" component={PostLoginSplash} />
+      <Route path="/app" component={AppDashboard} />
       <Route path="/404" component={NotFound} />
       <Route component={NotFound} />
     </Switch>

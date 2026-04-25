@@ -96,3 +96,14 @@
 - [x] Criar página "Meus Simuladores" com histórico
 - [x] Testar fluxo completo de autenticação
 - [x] Todos os 39 testes passando
+
+
+## Reorganização do Fluxo (Etapa 3 - Novo Fluxo)
+- [x] Criar Splash screen pós-login com animação
+- [x] Criar Dashboard principal (AppDashboard) com seleção de carreiras
+- [x] Reorganizar rotas: /splash e /app
+- [x] Atualizar LoginForm para redirecionar para /splash
+- [x] Atualizar SignupForm para redirecionar para /splash
+- [x] Integrar seleção de carreira no dashboard
+- [x] Integrar seleção de metodologia (Ágil/Cascata)
+- [x] Todos os 39 testes continuam passando

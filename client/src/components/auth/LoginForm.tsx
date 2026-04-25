@@ -20,7 +20,7 @@ export default function LoginForm() {
   const loginMutation = trpc.auth.login.useMutation({
     onSuccess: () => {
       toast.success("Login realizado com sucesso!");
-      setLocation("/dashboard");
+      setLocation("/splash");
     },
     onError: (error) => {
       setError(error.message || "Falha ao fazer login");

@@ -38,12 +38,12 @@ export default function MethodologySelection() {
     setIsLoading(true);
     // Simulate navigation delay
      setTimeout(() => {
-      setLocation(`/simulator/environment?career=${careerId}&methodology=${methodologyId}`);
+      setLocation(`/simulator?career=${careerId}&methodology=${methodologyId}`);
     }, 500);
   };
 
   const handleBack = () => {
-    setLocation("/simulator/careers");
+    setLocation("/app");
   };
 
   return (

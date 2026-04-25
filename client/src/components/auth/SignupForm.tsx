@@ -25,7 +25,7 @@ export default function SignupForm() {
       setSuccess(true);
       toast.success("Cadastro realizado com sucesso!");
       setTimeout(() => {
-        setLocation("/auth/login");
+        setLocation("/splash");
       }, 2000);
     },
     onError: (error) => {
