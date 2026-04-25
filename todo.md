@@ -111,3 +111,11 @@
 
 ## Ajuste de Fluxo Pós-Splash
 - [x] Redirecionar para /my-simulations após splash (não para /app)
+
+
+## Bug Fix - Logout Automático Após Login
+- [x] Corrigir useCombinedAuth para não desautenticar usuários locais
+- [x] Garantir que loading do OAuth não interfira com local auth
+- [x] DashboardLayout não deve mostrar tela de login se houver local user
+- [x] Local user prioriza sobre OAuth (não é sobreposto)
+- [x] Loading retorna false quando há local user (sem esperar OAuth)

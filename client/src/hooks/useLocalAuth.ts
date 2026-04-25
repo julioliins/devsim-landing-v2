@@ -29,36 +29,50 @@ export function setLocalUser(user: LocalUser | null) {
 }
 
 /**
- * Combined auth hook that supports both OAuth (Manus) and local email/password authentication
+ * Combined auth hook that supports both OAuth (Manus) and local email/password authentication.
+ * Local user (email/password) takes priority and is NOT affected by OAuth loading/errors.
  */
 export function useCombinedAuth() {
+  // Initialize state synchronously from localStorage to avoid flash of unauthenticated state
+  const [localUser, setLocalUserState] = useState<LocalUser | null>(() => getLocalUser());
   const { user: oauthUser, loading: oauthLoading, logout: oauthLogout } = useAuth();
-  const [localUser, setLocalUserState] = useState<LocalUser | null>(getLocalUser());
 
   useEffect(() => {
-    // Sync localStorage on mount
-    setLocalUserState(getLocalUser());
-
     // Listen for storage changes (multi-tab sync)
-    const handleStorage = () => setLocalUserState(getLocalUser());
+    const handleStorage = (e: StorageEvent) => {
+      if (e.key === LOCAL_AUTH_KEY) {
+        setLocalUserState(getLocalUser());
+      }
+    };
     window.addEventListener("storage", handleStorage);
     return () => window.removeEventListener("storage", handleStorage);
   }, []);
 
-  const user = oauthUser || localUser;
+  // Local user takes priority over OAuth user
+  const user = localUser || oauthUser;
   const isAuthenticated = Boolean(user);
 
+  // Loading is false if we have a local user (no need to wait for OAuth check)
+  const loading = localUser ? false : oauthLoading;
+
   const logout = async () => {
+    // Clear local user immediately
     setLocalUser(null);
     setLocalUserState(null);
+    // Also logout from OAuth if applicable
     if (oauthUser) {
-      await oauthLogout();
+      try {
+        await oauthLogout();
+      } catch (err) {
+        // Ignore OAuth logout errors
+        console.warn("OAuth logout failed:", err);
+      }
     }
   };
 
   return {
     user,
-    loading: oauthLoading,
+    loading,
     isAuthenticated,
     logout,
     isLocalAuth: Boolean(localUser),
