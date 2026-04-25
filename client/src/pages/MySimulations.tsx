@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
-import { useAuth } from "@/_core/hooks/useAuth";
+import { useEffect } from "react";
+import { useCombinedAuth } from "@/hooks/useLocalAuth";
 import DashboardLayout from "@/components/DashboardLayout";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -8,7 +8,7 @@ import { Calendar, Zap, TrendingUp, RotateCcw } from "lucide-react";
 import { useLocation } from "wouter";
 
 export default function MySimulations() {
-  const { isAuthenticated, loading } = useAuth();
+  const { isAuthenticated, loading } = useCombinedAuth();
   const [, setLocation] = useLocation();
 
   const userSessions = trpc.simulator.getUserSessions.useQuery(undefined, {

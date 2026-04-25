@@ -1,4 +1,4 @@
-import { useAuth } from "@/_core/hooks/useAuth";
+import { useCombinedAuth } from "@/hooks/useLocalAuth";
 import { useLocation, useSearch } from "wouter";
 import { useEffect, useState } from "react";
 import DashboardLayout from "@/components/DashboardLayout";
@@ -10,7 +10,7 @@ import SupportSettings from "@/components/settings/SupportSettings";
 type TabId = "profile" | "security" | "privacy" | "support";
 
 export default function Dashboard() {
-  const { isAuthenticated, loading } = useAuth();
+  const { isAuthenticated, loading } = useCombinedAuth();
   const [, setLocation] = useLocation();
   const search = useSearch();
 

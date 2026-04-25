@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
 import { useLocation } from "wouter";
-import { useAuth } from "@/_core/hooks/useAuth";
+import { useCombinedAuth } from "@/hooks/useLocalAuth";
 
 export default function PostLoginSplash() {
   const [, setLocation] = useLocation();
-  const { user } = useAuth();
+  const { user } = useCombinedAuth();
   const [progress, setProgress] = useState(0);
 
   // Animate progress bar

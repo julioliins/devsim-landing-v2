@@ -8,6 +8,7 @@ import { AlertCircle, Loader2 } from "lucide-react";
 import { getLoginUrl } from "@/const";
 import { trpc } from "@/lib/trpc";
 import { toast } from "sonner";
+import { setLocalUser } from "@/hooks/useLocalAuth";
 
 export default function LoginForm() {
   const [, setLocation] = useLocation();
@@ -18,7 +19,15 @@ export default function LoginForm() {
   const [authMethod, setAuthMethod] = useState<"email" | "oauth">("email");
 
   const loginMutation = trpc.auth.login.useMutation({
-    onSuccess: () => {
+    onSuccess: (data) => {
+      // Save user to localStorage for local auth persistence
+      if (data.user) {
+        setLocalUser({
+          id: data.user.id,
+          name: data.user.name || "",
+          email: data.user.email || "",
+        });
+      }
       toast.success("Login realizado com sucesso!");
       setLocation("/splash");
     },

@@ -23,9 +23,9 @@ export default function SignupForm() {
   const signupMutation = trpc.auth.signup.useMutation({
     onSuccess: () => {
       setSuccess(true);
-      toast.success("Cadastro realizado com sucesso!");
+      toast.success("Cadastro realizado com sucesso! Faça login para continuar.");
       setTimeout(() => {
-        setLocation("/splash");
+        setLocation("/auth/login");
       }, 2000);
     },
     onError: (error) => {
@@ -110,7 +110,7 @@ export default function SignupForm() {
           <CheckCircle2 className="w-16 h-16 text-green-600 mx-auto" />
           <div className="space-y-2">
             <h2 className="text-2xl font-bold text-foreground">Conta Criada com Sucesso!</h2>
-            <p className="text-muted-foreground">Redirecionando para login...</p>
+            <p className="text-muted-foreground">Redirecionando para a tela de login...</p>
           </div>
         </div>
       </Card>
