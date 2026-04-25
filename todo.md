@@ -136,3 +136,9 @@
 - [x] Desabilitar query auth.me quando há local user no localStorage
 - [x] Refatorar useLocalAuth para não chamar auth.me quando há local user
 - [x] 63 testes passando após refator
+
+
+## Ajuste Sidebar Navigation
+- [x] Trocar label "Navigation" por "Menu"
+- [x] Tornar item "Simuladores" clicável (link para /career-selection)
+- [x] CareerSelection envolvida em DashboardLayout para mostrar sidebar

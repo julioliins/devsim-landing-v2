@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Code2, TestTube2, FileText, Zap, ArrowRight, Loader2 } from "lucide-react";
+import DashboardLayout from "@/components/DashboardLayout";
 
 const careers = [
   {
@@ -55,21 +56,12 @@ export default function CareerSelection() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-950 dark:to-slate-900">
-      {/* Header */}
-      <div className="border-b border-border bg-white dark:bg-slate-900 sticky top-0 z-40">
-        <div className="container mx-auto px-4 py-6">
-          <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-3xl font-bold text-foreground">Escolha sua Carreira</h1>
-              <p className="text-muted-foreground mt-1">Selecione a profissão que deseja simular</p>
-            </div>
-          </div>
-        </div>
+    <DashboardLayout>
+      <div className="mb-8">
+        <h1 className="text-3xl font-bold text-foreground">Escolha sua Carreira</h1>
+        <p className="text-muted-foreground mt-1">Selecione a profissão que deseja simular</p>
       </div>
-
-      {/* Main Content */}
-      <div className="container mx-auto px-4 py-12">
+      <div className="">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6">
           {careers.map((career) => {
             const IconComponent = career.icon;
@@ -168,6 +160,6 @@ export default function CareerSelection() {
           </Card>
         </div>
       </div>
-    </div>
+    </DashboardLayout>
   );
 }
