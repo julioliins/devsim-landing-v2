@@ -129,3 +129,10 @@
 - [x] Adicionar verificação hasLocalUser antes de redirecionar
 - [x] 10 novos testes para OAuth redirect prevention
 - [x] 63 testes passando no total
+
+
+## Bug Fix - Erro "Please login" no Console
+- [x] Silenciar TRPCClientError "Please login" quando há local user
+- [x] Desabilitar query auth.me quando há local user no localStorage
+- [x] Refatorar useLocalAuth para não chamar auth.me quando há local user
+- [x] 63 testes passando após refator

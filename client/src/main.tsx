@@ -45,10 +45,17 @@ const redirectToLoginIfUnauthorized = (error: unknown) => {
   window.location.href = "/auth/login";
 };
 
+const isUnauthorizedError = (error: unknown): boolean => {
+  if (!(error instanceof TRPCClientError)) return false;
+  return error.message === UNAUTHED_ERR_MSG;
+};
+
 queryClient.getQueryCache().subscribe(event => {
   if (event.type === "updated" && event.action.type === "error") {
     const error = event.query.state.error;
     redirectToLoginIfUnauthorized(error);
+    // Don't log unauthorized errors when local user exists (expected behavior)
+    if (isUnauthorizedError(error) && hasLocalUser()) return;
     console.error("[API Query Error]", error);
   }
 });
@@ -57,6 +64,8 @@ queryClient.getMutationCache().subscribe(event => {
   if (event.type === "updated" && event.action.type === "error") {
     const error = event.mutation.state.error;
     redirectToLoginIfUnauthorized(error);
+    // Don't log unauthorized errors when local user exists (expected behavior)
+    if (isUnauthorizedError(error) && hasLocalUser()) return;
     console.error("[API Mutation Error]", error);
   }
 });

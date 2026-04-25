@@ -1,5 +1,6 @@
-import { useEffect, useState } from "react";
-import { useAuth } from "@/_core/hooks/useAuth";
+import { useEffect, useState, useCallback } from "react";
+import { trpc } from "@/lib/trpc";
+import { TRPCClientError } from "@trpc/client";
 
 interface LocalUser {
   id: number;
@@ -30,12 +31,31 @@ export function setLocalUser(user: LocalUser | null) {
 
 /**
  * Combined auth hook that supports both OAuth (Manus) and local email/password authentication.
- * Local user (email/password) takes priority and is NOT affected by OAuth loading/errors.
+ *
+ * Local user (email/password) takes ABSOLUTE priority:
+ * - When local user exists, OAuth check is DISABLED (no API call to auth.me)
+ * - Loading is false immediately when local user exists
+ * - No "Please login" errors in console for local users
+ *
+ * OAuth check is only enabled when no local user exists.
  */
 export function useCombinedAuth() {
-  // Initialize state synchronously from localStorage to avoid flash of unauthenticated state
+  // Initialize state synchronously from localStorage
   const [localUser, setLocalUserState] = useState<LocalUser | null>(() => getLocalUser());
-  const { user: oauthUser, loading: oauthLoading, logout: oauthLogout } = useAuth();
+  const utils = trpc.useUtils();
+
+  // Only enable OAuth query when there's NO local user
+  const meQuery = trpc.auth.me.useQuery(undefined, {
+    retry: false,
+    refetchOnWindowFocus: false,
+    enabled: !localUser, // <- Critical: disable when local user exists
+  });
+
+  const logoutMutation = trpc.auth.logout.useMutation({
+    onSuccess: () => {
+      utils.auth.me.setData(undefined, null);
+    },
+  });
 
   useEffect(() => {
     // Listen for storage changes (multi-tab sync)
@@ -48,27 +68,37 @@ export function useCombinedAuth() {
     return () => window.removeEventListener("storage", handleStorage);
   }, []);
 
-  // Local user takes priority over OAuth user
+  // Local user takes ABSOLUTE priority
+  const oauthUser = meQuery.data ?? null;
   const user = localUser || oauthUser;
   const isAuthenticated = Boolean(user);
 
-  // Loading is false if we have a local user (no need to wait for OAuth check)
-  const loading = localUser ? false : oauthLoading;
+  // Loading: false if local user exists, otherwise depends on OAuth
+  const loading = localUser ? false : meQuery.isLoading;
 
-  const logout = async () => {
+  const logout = useCallback(async () => {
     // Clear local user immediately
     setLocalUser(null);
     setLocalUserState(null);
-    // Also logout from OAuth if applicable
+    // Also try to logout from OAuth if there's an OAuth session
     if (oauthUser) {
       try {
-        await oauthLogout();
-      } catch (err) {
-        // Ignore OAuth logout errors
+        await logoutMutation.mutateAsync();
+      } catch (err: unknown) {
+        if (
+          err instanceof TRPCClientError &&
+          err.data?.code === "UNAUTHORIZED"
+        ) {
+          // Already unauthorized - ignore
+          return;
+        }
         console.warn("OAuth logout failed:", err);
+      } finally {
+        utils.auth.me.setData(undefined, null);
+        await utils.auth.me.invalidate();
       }
     }
-  };
+  }, [oauthUser, logoutMutation, utils]);
 
   return {
     user,
