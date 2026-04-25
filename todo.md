@@ -119,3 +119,13 @@
 - [x] DashboardLayout não deve mostrar tela de login se houver local user
 - [x] Local user prioriza sobre OAuth (não é sobreposto)
 - [x] Loading retorna false quando há local user (sem esperar OAuth)
+
+
+## Bug Fix - Redirecionamento OAuth Persistente
+- [x] Identificar onde está sendo chamado window.location para tela OAuth (main.tsx interceptor global)
+- [x] Remover redirecionamento para getLoginUrl() quando há local user
+- [x] Garantir que MySimulations não redireciona com local user válido
+- [x] Substituir getLoginUrl() por /auth/login local no main.tsx
+- [x] Adicionar verificação hasLocalUser antes de redirecionar
+- [x] 10 novos testes para OAuth redirect prevention
+- [x] 63 testes passando no total

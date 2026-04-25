@@ -5,10 +5,20 @@ import { httpBatchLink, TRPCClientError } from "@trpc/client";
 import { createRoot } from "react-dom/client";
 import superjson from "superjson";
 import App from "./App";
-import { getLoginUrl } from "./const";
 import "./index.css";
 
 const queryClient = new QueryClient();
+
+const LOCAL_AUTH_KEY = "devsim-local-auth";
+
+const hasLocalUser = (): boolean => {
+  if (typeof window === "undefined") return false;
+  try {
+    return Boolean(window.localStorage.getItem(LOCAL_AUTH_KEY));
+  } catch {
+    return false;
+  }
+};
 
 const redirectToLoginIfUnauthorized = (error: unknown) => {
   if (!(error instanceof TRPCClientError)) return;
@@ -18,7 +28,21 @@ const redirectToLoginIfUnauthorized = (error: unknown) => {
 
   if (!isUnauthorized) return;
 
-  window.location.href = getLoginUrl();
+  // If user has local authentication, do NOT redirect to OAuth
+  // The user is logged in via email/password, just ignore the unauthed error
+  if (hasLocalUser()) {
+    console.warn("[Auth] OAuth check failed but local user exists, ignoring");
+    return;
+  }
+
+  // Only redirect to local login page (not OAuth) if no local user
+  // Avoid infinite redirect loops
+  const currentPath = window.location.pathname;
+  if (currentPath.startsWith("/auth/") || currentPath === "/") {
+    return;
+  }
+
+  window.location.href = "/auth/login";
 };
 
 queryClient.getQueryCache().subscribe(event => {
