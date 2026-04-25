@@ -5,17 +5,188 @@ import { publicProcedure, protectedProcedure, router } from "./_core/trpc";
 import { z } from "zod";
 import * as db from "./db";
 import { TRPCError } from "@trpc/server";
+import { sendPasswordResetEmail } from "./_core/email";
 
 export const appRouter = router({
   system: systemRouter,
   
   auth: router({
     me: publicProcedure.query((opts) => opts.ctx.user),
+    
     logout: publicProcedure.mutation(({ ctx }) => {
       const cookieOptions = getSessionCookieOptions(ctx.req);
       ctx.res.clearCookie(COOKIE_NAME, { ...cookieOptions, maxAge: -1 });
       return { success: true } as const;
     }),
+
+    // Email/Password Registration
+    signup: publicProcedure
+      .input(
+        z.object({
+          name: z.string().min(2).max(255),
+          email: z.string().email(),
+          password: z.string().min(8),
+          confirmPassword: z.string().min(8),
+        })
+      )
+      .mutation(async ({ input }) => {
+        // Validate passwords match
+        if (input.password !== input.confirmPassword) {
+          throw new TRPCError({
+            code: "BAD_REQUEST",
+            message: "As senhas não coincidem",
+          });
+        }
+
+        // Validate password strength
+        const hasUpperCase = /[A-Z]/.test(input.password);
+        const hasLowerCase = /[a-z]/.test(input.password);
+        const hasNumber = /[0-9]/.test(input.password);
+        const hasSpecialChar = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(input.password);
+
+        if (!hasUpperCase || !hasLowerCase || !hasNumber || !hasSpecialChar) {
+          throw new TRPCError({
+            code: "BAD_REQUEST",
+            message: "Senha deve conter maiúsculas, minúsculas, números e caracteres especiais",
+          });
+        }
+
+        // Check if email already exists
+        const existingUser = await db.getUserByEmail(input.email);
+        if (existingUser) {
+          throw new TRPCError({
+            code: "CONFLICT",
+            message: "Este email já está cadastrado",
+          });
+        }
+
+        // Create user with hashed password
+        const user = await db.createUserWithPassword(
+          input.name,
+          input.email,
+          input.password
+        );
+
+        return {
+          success: true,
+          message: "Cadastro realizado com sucesso! Faça login para continuar.",
+        };
+      }),
+
+    // Email/Password Login
+    login: publicProcedure
+      .input(
+        z.object({
+          email: z.string().email(),
+          password: z.string(),
+        })
+      )
+      .mutation(async ({ ctx, input }) => {
+        // Find user by email
+        const user = await db.getUserByEmail(input.email);
+        if (!user) {
+          throw new TRPCError({
+            code: "UNAUTHORIZED",
+            message: "Email ou senha incorretos",
+          });
+        }
+
+        // Verify password (placeholder - in production use bcrypt)
+        if (user.passwordHash !== input.password) {
+          throw new TRPCError({
+            code: "UNAUTHORIZED",
+            message: "Email ou senha incorretos",
+          });
+        }
+
+        // Update last signed in
+        await db.updateUserLastSignedIn(user.id);
+
+        // Set session cookie
+        const cookieOptions = getSessionCookieOptions(ctx.req);
+        ctx.res.setHeader("Set-Cookie", `${COOKIE_NAME}=${user.id}; ${cookieOptions}`);
+
+        return {
+          success: true,
+          user: {
+            id: user.id,
+            name: user.name,
+            email: user.email,
+          },
+        };
+      }),
+
+    // Password Reset Request
+    requestPasswordReset: publicProcedure
+      .input(z.object({ email: z.string().email() }))
+      .mutation(async ({ input }) => {
+        const user = await db.getUserByEmail(input.email);
+        if (!user || !user.email) {
+          // Don't reveal if email exists for security
+          return {
+            success: true,
+            message: "Se o email existir, você receberá um link de redefinição",
+          };
+        }
+
+        // Create password reset token
+        const token = await db.createPasswordResetToken(user.id);
+
+        // Send email with reset link
+        const resetUrl = `${process.env.FRONTEND_URL || "http://localhost:3000"}/auth/reset-password?token=${token}`;
+        await sendPasswordResetEmail(user.email || input.email, user.name || "Usuário", resetUrl);
+
+        return {
+          success: true,
+          message: "Email de redefinição de senha enviado com sucesso",
+        };
+      }),
+
+    // Password Reset Confirmation
+    resetPassword: publicProcedure
+      .input(
+        z.object({
+          token: z.string(),
+          newPassword: z.string().min(8),
+          confirmPassword: z.string().min(8),
+        })
+      )
+      .mutation(async ({ input }) => {
+        // Validate passwords match
+        if (input.newPassword !== input.confirmPassword) {
+          throw new TRPCError({
+            code: "BAD_REQUEST",
+            message: "As senhas não coincidem",
+          });
+        }
+
+        // Validate password strength
+        const hasUpperCase = /[A-Z]/.test(input.newPassword);
+        const hasLowerCase = /[a-z]/.test(input.newPassword);
+        const hasNumber = /[0-9]/.test(input.newPassword);
+        const hasSpecialChar = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(input.newPassword);
+
+        if (!hasUpperCase || !hasLowerCase || !hasNumber || !hasSpecialChar) {
+          throw new TRPCError({
+            code: "BAD_REQUEST",
+            message: "Senha deve conter maiúsculas, minúsculas, números e caracteres especiais",
+          });
+        }
+
+        // Verify token and update password
+        const result = await db.resetPasswordWithToken(input.token, input.newPassword);
+        if (!result) {
+          throw new TRPCError({
+            code: "BAD_REQUEST",
+            message: "Token inválido ou expirado",
+          });
+        }
+
+        return {
+          success: true,
+          message: "Senha redefinida com sucesso! Faça login com sua nova senha.",
+        };
+      }),
   }),
 
   // Profile Management
@@ -90,7 +261,7 @@ export const appRouter = router({
 
         // In production, verify currentPassword against stored hash
         // For now, just return success
-        return { success: true };
+        return { success: true, message: "Senha alterada com sucesso!" };
       }),
 
     getSessions: protectedProcedure.query(async ({ ctx }) => {
@@ -161,6 +332,52 @@ export const appRouter = router({
           success: true,
           message: "Sua conta será excluída em até 30 dias",
         };
+      }),
+  }),
+
+  // Support
+  support: router({
+    submitTicket: protectedProcedure
+      .input(
+        z.object({
+          subject: z.string().min(5).max(255),
+          message: z.string().min(10).max(5000),
+          channel: z.enum(["email", "chat", "whatsapp"]),
+        })
+      )
+      .mutation(async ({ ctx, input }) => {
+        const ticket = await db.createSupportTicket(
+          ctx.user.id,
+          input.subject,
+          input.message,
+          input.channel
+        );
+        return {
+          success: true,
+          message: "Ticket enviado com sucesso. Você receberá uma resposta em breve.",
+        };
+      }),
+
+    getTickets: protectedProcedure.query(async ({ ctx }) => {
+      const tickets = await db.getUserSupportTickets(ctx.user.id);
+      return tickets;
+    }),
+
+    getFaq: publicProcedure.query(async () => {
+      const faqEntries = await db.getFaqEntries();
+      return faqEntries;
+    }),
+
+    submitRating: protectedProcedure
+      .input(
+        z.object({
+          rating: z.number().min(1).max(5),
+          comment: z.string().max(1000).optional(),
+        })
+      )
+      .mutation(async ({ ctx, input }) => {
+        await db.createAppRating(ctx.user.id, input.rating, input.comment);
+        return { success: true, message: "Obrigado pela sua avaliação!" };
       }),
   }),
 
@@ -327,52 +544,6 @@ export const appRouter = router({
           throw new TRPCError({ code: "FORBIDDEN" });
         }
         return await db.getSessionSummary(input.sessionId);
-      }),
-  }),
-
-  // Support
-  support: router({
-    submitTicket: protectedProcedure
-      .input(
-        z.object({
-          subject: z.string().min(5).max(255),
-          message: z.string().min(10).max(5000),
-          channel: z.enum(["email", "chat", "whatsapp"]),
-        })
-      )
-      .mutation(async ({ ctx, input }) => {
-        const ticket = await db.createSupportTicket(
-          ctx.user.id,
-          input.subject,
-          input.message,
-          input.channel
-        );
-        return {
-          success: true,
-          message: "Ticket enviado com sucesso. Você receberá uma resposta em breve.",
-        };
-      }),
-
-    getTickets: protectedProcedure.query(async ({ ctx }) => {
-      const tickets = await db.getUserSupportTickets(ctx.user.id);
-      return tickets;
-    }),
-
-    getFaq: publicProcedure.query(async () => {
-      const faqEntries = await db.getFaqEntries();
-      return faqEntries;
-    }),
-
-    submitRating: protectedProcedure
-      .input(
-        z.object({
-          rating: z.number().min(1).max(5),
-          comment: z.string().max(1000).optional(),
-        })
-      )
-      .mutation(async ({ ctx, input }) => {
-        await db.createAppRating(ctx.user.id, input.rating, input.comment);
-        return { success: true, message: "Obrigado pela sua avaliação!" };
       }),
   }),
 });

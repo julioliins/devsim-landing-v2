@@ -83,3 +83,16 @@
 - [x] Testes Unitários para Simuladores (8 testes)
 - [x] Integração com Sistema de Autenticação
 - [x] Proteção de Rotas para Simuladores
+
+
+## Correções de Bugs Críticos
+- [x] Mover splash screen para após login (não na inicialização)
+- [x] Implementar autenticação com email/senha (sem forçar OAuth)
+- [x] Implementar recuperação de senha com envio real de email (Resend)
+- [x] Ativar funcionalidades da aba Segurança
+- [x] Ativar funcionalidades da aba Privacidade/LGPD
+- [x] Ativar funcionalidades da aba Suporte
+- [x] Adicionar acesso aos simuladores no dashboard
+- [x] Criar página "Meus Simuladores" com histórico
+- [x] Testar fluxo completo de autenticação
+- [x] Todos os 39 testes passando

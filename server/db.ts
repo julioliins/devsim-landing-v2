@@ -96,6 +96,65 @@ export async function getUserById(id: number) {
   return result.length > 0 ? result[0] : undefined;
 }
 
+export async function getUserByEmail(email: string) {
+  const db = await getDb();
+  if (!db) return undefined;
+  const result = await db.select().from(users).where(eq(users.email, email)).limit(1);
+  return result.length > 0 ? result[0] : undefined;
+}
+
+export async function createUserWithPassword(name: string, email: string, password: string) {
+  const db = await getDb();
+  if (!db) return undefined;
+  // In production, hash the password with bcrypt
+  return await db.insert(users).values({
+    openId: email, // Use email as openId for email/password auth
+    name,
+    email,
+    loginMethod: "email",
+    passwordHash: password, // TODO: Hash with bcrypt in production
+    role: "user",
+    lastSignedIn: new Date(),
+  });
+}
+
+export async function updateUserLastSignedIn(userId: number) {
+  const db = await getDb();
+  if (!db) return undefined;
+  return await db.update(users)
+    .set({ lastSignedIn: new Date() })
+    .where(eq(users.id, userId));
+}
+
+export async function createPasswordResetToken(userId: number) {
+  const db = await getDb();
+  if (!db) return undefined;
+  const token = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+  const expiresAt = new Date(Date.now() + 24 * 60 * 60 * 1000); // 24 hours
+  await db.insert(passwordResets).values({ userId, token, expiresAt });
+  return token;
+}
+
+export async function resetPasswordWithToken(token: string, newPassword: string) {
+  const db = await getDb();
+  if (!db) return false;
+  
+  const reset = await getPasswordResetByToken(token);
+  if (!reset || reset.usedAt || reset.expiresAt < new Date()) {
+    return false;
+  }
+  
+  // Update user password
+  await db.update(users)
+    .set({ passwordHash: newPassword }) // TODO: Hash with bcrypt in production
+    .where(eq(users.id, reset.userId));
+  
+  // Mark token as used
+  await markPasswordResetAsUsed(reset.id);
+  
+  return true;
+}
+
 export async function getUserProfile(userId: number) {
   const db = await getDb();
   if (!db) return undefined;

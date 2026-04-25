@@ -1,24 +1,13 @@
 import { useEffect, useState } from "react";
 import { useRoute } from "wouter";
-import SplashScreen from "@/components/auth/SplashScreen";
 import LoginForm from "@/components/auth/LoginForm";
 import SignupForm from "@/components/auth/SignupForm";
 import PasswordResetForm from "@/components/auth/PasswordResetForm";
 import { useAuth } from "@/_core/hooks/useAuth";
 
 export default function Auth() {
-  const [showSplash, setShowSplash] = useState(true);
   const [, params] = useRoute("/auth/:step");
   const { isAuthenticated } = useAuth();
-
-  useEffect(() => {
-    const timer = setTimeout(() => setShowSplash(false), 3000);
-    return () => clearTimeout(timer);
-  }, []);
-
-  if (showSplash) {
-    return <SplashScreen />;
-  }
 
   const step = params?.step || "login";
 

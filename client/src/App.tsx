@@ -11,38 +11,30 @@ import CareerSelection from "./pages/CareerSelection";
 import MethodologySelection from "./pages/MethodologySelection";
 import SimulatorEnvironment from "./pages/SimulatorEnvironment";
 import SessionSummary from "./pages/SessionSummary";
+import MySimulations from "./pages/MySimulations";
 
 function Router() {
-  // make sure to consider if you need authentication for certain routes
   return (
     <Switch>
       <Route path="/" component={Home} />
       <Route path="/auth/:step" component={Auth} />
       <Route path="/auth" component={Auth} />
       <Route path="/dashboard" component={Dashboard} />
-      <Route path="/simulator/careers" component={CareerSelection} />
-      <Route path="/simulator/methodology" component={MethodologySelection} />
-      <Route path="/simulator/environment" component={SimulatorEnvironment} />
-      <Route path="/simulator/summary" component={SessionSummary} />
+      <Route path="/career-selection" component={CareerSelection} />
+      <Route path="/methodology-selection" component={MethodologySelection} />
+      <Route path="/simulator" component={SimulatorEnvironment} />
+      <Route path="/session-summary" component={SessionSummary} />
+      <Route path="/my-simulations" component={MySimulations} />
       <Route path="/404" component={NotFound} />
-      {/* Final fallback route */}
       <Route component={NotFound} />
     </Switch>
   );
 }
 
-// NOTE: About Theme
-// - First choose a default theme according to your design style (dark or light bg), than change color palette in index.css
-//   to keep consistent foreground/background color across components
-// - If you want to make theme switchable, pass `switchable` ThemeProvider and use `useTheme` hook
-
 function App() {
   return (
     <ErrorBoundary>
-      <ThemeProvider
-        defaultTheme="light"
-        // switchable
-      >
+      <ThemeProvider defaultTheme="light">
         <TooltipProvider>
           <Toaster />
           <Router />

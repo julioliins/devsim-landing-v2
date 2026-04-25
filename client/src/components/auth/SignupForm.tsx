@@ -5,7 +5,8 @@ import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { AlertCircle, CheckCircle2, Loader2 } from "lucide-react";
-import { getLoginUrl } from "@/const";
+import { trpc } from "@/lib/trpc";
+import { toast } from "sonner";
 
 export default function SignupForm() {
   const [, setLocation] = useLocation();
@@ -18,6 +19,20 @@ export default function SignupForm() {
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [isLoading, setIsLoading] = useState(false);
   const [success, setSuccess] = useState(false);
+
+  const signupMutation = trpc.auth.signup.useMutation({
+    onSuccess: () => {
+      setSuccess(true);
+      toast.success("Cadastro realizado com sucesso!");
+      setTimeout(() => {
+        setLocation("/auth/login");
+      }, 2000);
+    },
+    onError: (error) => {
+      setErrors({ submit: error.message || "Falha ao criar conta" });
+      toast.error(error.message || "Falha ao criar conta");
+    },
+  });
 
   const validateForm = () => {
     const newErrors: Record<string, string> = {};
@@ -34,6 +49,17 @@ export default function SignupForm() {
       newErrors.password = "Senha deve ter no mínimo 8 caracteres";
     }
 
+    // Check password strength
+    const hasUpperCase = /[A-Z]/.test(formData.password);
+    const hasLowerCase = /[a-z]/.test(formData.password);
+    const hasNumber = /[0-9]/.test(formData.password);
+    const hasSpecialChar = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(formData.password);
+
+    if (!hasUpperCase || !hasLowerCase || !hasNumber || !hasSpecialChar) {
+      newErrors.password =
+        "Senha deve conter maiúsculas, minúsculas, números e caracteres especiais";
+    }
+
     if (formData.password !== formData.confirmPassword) {
       newErrors.confirmPassword = "As senhas não coincidem";
     }
@@ -44,7 +70,7 @@ export default function SignupForm() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!validateForm()) {
       return;
     }
@@ -52,13 +78,14 @@ export default function SignupForm() {
     setIsLoading(true);
 
     try {
-      // Placeholder for signup - in production, implement your registration method
-      setSuccess(true);
-      setTimeout(() => {
-        setLocation("/auth/login");
-      }, 2000);
+      await signupMutation.mutateAsync({
+        name: formData.name,
+        email: formData.email,
+        password: formData.password,
+        confirmPassword: formData.confirmPassword,
+      });
     } catch (err) {
-      setErrors({ submit: "Falha ao criar conta. Tente novamente." });
+      // Error is handled by mutation onError
     } finally {
       setIsLoading(false);
     }
