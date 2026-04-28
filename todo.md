@@ -179,3 +179,16 @@
 - [x] Redirect funcional para todas as profissões via /workspace/:slug
 - [x] Testes atualizados validando as 4 profissões (86 testes passando)
 - [x] Checkpoint criado
+
+
+## Mascote, FAQ e Conclusão de etapas
+- [x] Tipos `FaqItem` e `MentorQuestion` adicionados em workspaceContent.ts
+- [x] FAQ (6 perguntas cada) para Desenvolvedor, Tester, Analista e DevOps
+- [x] Perguntas do mascote (4 por profissão) com resposta + direcionamento + exemplo
+- [x] Componente `MentorChat.tsx` com mascote Dev Sim e avatar real
+- [x] Componente `FaqAccordion.tsx` com dica do mentor integrada
+- [x] Botão "Concluir e avançar" reforçado com feedback visual e caixa de ação
+- [x] MentorChat integrado como seção Review no VirtualWorkspace
+- [x] FaqAccordion integrado ao final da página
+- [x] Testes adicionados (89 testes passando, 3 novos)
+- [x] Checkpoint criado

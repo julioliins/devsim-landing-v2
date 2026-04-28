@@ -133,6 +133,43 @@ describe("Workspace Content (Área Virtual)", () => {
       "tester",
     ]);
   });
+
+  it("todas as profissões têm perguntas do mentor (>= 4) com resposta, guia e exemplo", () => {
+    const slugs = ["desenvolvedor", "tester", "analista", "devops"];
+    slugs.forEach((slug) => {
+      const content = getWorkspaceContent(slug)!;
+      expect(content.mentorQuestions.length, `mentor ${slug}`).toBeGreaterThanOrEqual(4);
+      content.mentorQuestions.forEach((q) => {
+        expect(q.id).toBeTruthy();
+        expect(q.question.length).toBeGreaterThan(5);
+        expect(q.shortAnswer.length).toBeGreaterThan(10);
+        expect(q.guidance.length).toBeGreaterThan(5);
+        expect(q.example.length).toBeGreaterThan(5);
+      });
+    });
+  });
+
+  it("todas as profissões têm FAQ com pelo menos 5 perguntas de mercado", () => {
+    const slugs = ["desenvolvedor", "tester", "analista", "devops"];
+    slugs.forEach((slug) => {
+      const content = getWorkspaceContent(slug)!;
+      expect(content.faq.length, `faq ${slug}`).toBeGreaterThanOrEqual(5);
+      content.faq.forEach((item) => {
+        expect(item.question.length).toBeGreaterThan(5);
+        expect(item.answer.length).toBeGreaterThan(20);
+      });
+    });
+  });
+
+  it("IDs do mentor são únicos dentro de cada profissão", () => {
+    const slugs = ["desenvolvedor", "tester", "analista", "devops"];
+    slugs.forEach((slug) => {
+      const content = getWorkspaceContent(slug)!;
+      const ids = content.mentorQuestions.map((q) => q.id);
+      const unique = new Set(ids);
+      expect(unique.size, `ids únicos ${slug}`).toBe(ids.length);
+    });
+  });
 });
 
 // -----------------------------------------------------------------------------

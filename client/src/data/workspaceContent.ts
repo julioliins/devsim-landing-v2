@@ -67,6 +67,23 @@ export type LearningStep = {
   cta: string;
 };
 
+export type FaqItem = {
+  question: string;
+  answer: string;
+  tip?: string;
+};
+
+export type MentorQuestion = {
+  id: string;
+  question: string;
+  /** Resposta curta do mascote (2-4 frases). */
+  shortAnswer: string;
+  /** Direcionamento: o que o aluno deve fazer/estudar em seguida. */
+  guidance: string;
+  /** Exemplo prático de como isso aparece no time virtual DevSim. */
+  example: string;
+};
+
 export type WorkspaceProfession = {
   slug: string;
   name: string;
@@ -84,6 +101,8 @@ export type WorkspaceProfession = {
   sprint: SprintPhase[];
   tools: WorkspaceTool[];
   learningPath: LearningStep[];
+  mentorQuestions: MentorQuestion[];
+  faq: FaqItem[];
 };
 
 const developerContent: WorkspaceProfession = {
@@ -338,6 +357,83 @@ const developerContent: WorkspaceProfession = {
       cta: "Iniciar codificação da Demanda 1",
     },
   ],
+  mentorQuestions: [
+    {
+      id: "dev-q1",
+      question: "Não entendi o que é Scrum para o desenvolvedor. Pode explicar?",
+      shortAnswer:
+        "Scrum é o ritmo do seu trabalho: você recebe demandas em sprints curtos (2 semanas no DevSim), entrega algo testável ao final e repete o ciclo. Como dev, sua missão em cada sprint é transformar histórias de usuário em código rodando.",
+      guidance:
+        "Assista ao vídeo da Etapa 1 da trilha com foco na seção 'cerimonial' e participe mentalmente de cada cerimônia do simulador.",
+      example:
+        "No DevSim, você recebe na Planning a Demanda 1 (Configuração de Ambiente) do NPC Tech Lead, trabalha 5 dias na Execução e apresenta o resultado na Review. Se o ambiente não builda, a Demanda volta ao backlog.",
+    },
+    {
+      id: "dev-q2",
+      question: "Qual a diferença entre branch, commit e pull request?",
+      shortAnswer:
+        "Branch é uma linha paralela de trabalho; commit é um ponto salvo do seu código; pull request é o pedido formal para que o time aceite seu trabalho na branch principal.",
+      guidance:
+        "Pratique criando uma branch `feature/setup`, fazendo 2 commits pequenos e abrindo um PR mesmo que seja para você mesmo revisar.",
+      example:
+        "Na Demanda 1 você cria `feature/demanda-1-setup`, comita a instalação do Node e do VS Code separadamente, e o NPC Tech Lead revisa seu PR na Review.",
+    },
+    {
+      id: "dev-q3",
+      question: "Como estimar quanto tempo vou levar para fazer uma demanda?",
+      shortAnswer:
+        "Estimativas no início da carreira são chutes educados. O importante é quebrar a demanda em tarefas de no máximo 4h. Se algo parece maior, quebre de novo.",
+      guidance:
+        "Antes de começar a codar, liste 5 tarefas menores da Demanda 1 em uma lista. Só comece depois de ter a lista.",
+      example:
+        "Demanda 1 quebrada: (1) Instalar Node, (2) Instalar VS Code, (3) Configurar Git, (4) Clonar repositório, (5) Fazer primeiro commit.",
+    },
+    {
+      id: "dev-q4",
+      question: "O que é esperado de mim na Daily Meeting?",
+      shortAnswer:
+        "Responder três perguntas em até 1 minuto: o que fiz ontem, o que farei hoje e se estou bloqueado em algo.",
+      guidance:
+        "Escreva suas três respostas antes de começar o dia. Evita travar na hora.",
+      example:
+        "Ontem configurei o Node e o VS Code. Hoje vou clonar o repositório e abrir o primeiro PR. Estou bloqueado na credencial de acesso — preciso falar com o DevOps.",
+    },
+  ],
+  faq: [
+    {
+      question: "Preciso saber todas as linguagens antes de começar?",
+      answer:
+        "Não. No início, escolha UMA linguagem (JavaScript/TypeScript é uma excelente primeira escolha) e aprofunde. Mercado valoriza quem domina uma stack mais do que quem sabe superficialmente várias.",
+      tip: "Comece por JavaScript e, depois, migre para TypeScript no mesmo projeto.",
+    },
+    {
+      question: "Vale a pena fazer faculdade ou só bootcamp?",
+      answer:
+        "Faculdade dá base teórica (algoritmos, matemática, arquitetura) que ajuda em posições seniores. Bootcamp acelera o primeiro emprego. O ideal é combinar: faculdade + projetos pessoais + simuladores como o DevSim.",
+    },
+    {
+      question: "Como monto um portfólio se nunca trabalhei?",
+      answer:
+        "Use projetos pessoais, contribuições open source e entregas de simuladores como este. Para cada projeto, documente o problema, sua solução e o que você aprendeu — é isso que recrutadores leem.",
+      tip: "GitHub bem organizado vale mais do que 10 cursos no currículo.",
+    },
+    {
+      question: "Preciso saber inglês?",
+      answer:
+        "Para ler documentação: sim, essencial. Para falar com colegas: cresce a importância conforme você avança na carreira. Comece lendo issues e PRs em inglês ainda como júnior.",
+    },
+    {
+      question: "Quanto ganha um desenvolvedor júnior no Brasil?",
+      answer:
+        "A faixa atual (2025) varia de R$ 3.000 a R$ 7.000 para júnior, dependendo da cidade, stack e modelo (CLT vs PJ). Stacks como TypeScript + React e .NET + Azure tendem a pagar mais.",
+    },
+    {
+      question: "Quando está na hora de pedir ajuda?",
+      answer:
+        "Regra dos 30 minutos: se depois de meia hora tentando sozinho você não progrediu, chame alguém. Não é fraqueza, é eficiência de time.",
+      tip: "Antes de pedir ajuda, escreva o que já tentou. Muitas vezes você descobre a resposta escrevendo.",
+    },
+  ],
 };
 
 // -----------------------------------------------------------------------------
@@ -589,6 +685,83 @@ const testerContent: WorkspaceProfession = {
         ],
       },
       cta: "Iniciar execução da Demanda 1",
+    },
+  ],
+  mentorQuestions: [
+    {
+      id: "qa-q1",
+      question: "Qual a diferença entre teste manual e teste automatizado?",
+      shortAnswer:
+        "Teste manual é quando você executa passo a passo no navegador/app. Automatizado é um script que repete os mesmos passos por você — rodando em segundos e várias vezes ao dia.",
+      guidance:
+        "Faça o teste manual primeiro, entenda o fluxo, e só então automatize. Automatizar algo que você não testou na mão é armadilha clássica.",
+      example:
+        "Na Demanda 1 você cria um caso manual no Jira: 'Login com senha válida'. Depois, na Fase 2, automatiza esse mesmo caso no Cypress.",
+    },
+    {
+      id: "qa-q2",
+      question: "O que é um 'bom' bug report?",
+      shortAnswer:
+        "Um bug report é bom quando o desenvolvedor consegue reproduzir sem pedir informação. Ele precisa ter: passos, resultado esperado, resultado obtido e evidência (print/vídeo).",
+      guidance:
+        "Use o template: 1) Contexto, 2) Passos, 3) Esperado, 4) Obtido, 5) Anexos. Se faltar um, o bug volta para você.",
+      example:
+        "Bug: 'Login quebra com e-mail em maiúscula'. Passos: digite EMAIL@X.COM + senha correta. Esperado: logar. Obtido: erro 500. Anexo: screenshot.",
+    },
+    {
+      id: "qa-q3",
+      question: "Preciso saber programar para ser QA?",
+      shortAnswer:
+        "Para QA manual, não. Para QA de automação, sim — pelo menos JavaScript/Python básico. Hoje o mercado paga muito melhor para QAs que codam.",
+      guidance:
+        "Comece manual, aprenda JavaScript em paralelo, e em 6 meses você já pode automatizar com Cypress ou Playwright.",
+      example:
+        "No DevSim, a Fase 2 da sua trilha inclui Cypress. Você escreve scripts pequenos como `cy.visit('/login')` que são intuitivos.",
+    },
+    {
+      id: "qa-q4",
+      question: "Como lido com desenvolvedor que diz 'não é bug, é feature'?",
+      shortAnswer:
+        "Volte ao critério de aceite combinado na Planning. Se o comportamento contradiz o critério, é bug. Se o critério está ambíguo, é falha da história — leva para o PO decidir.",
+      guidance:
+        "Nunca discuta no calor. Abra o critério e deixe ele falar por você.",
+      example:
+        "NPC dev: 'isso não é bug'. Você: 'o critério 3 diz que e-mails devem ser case-insensitive. A feature quebra nesse cenário, então é bug.'",
+    },
+  ],
+  faq: [
+    {
+      question: "QA é uma área saturada?",
+      answer:
+        "Pelo contrário. O mercado carece de QAs que dominam automação e testes de API. QA manual básico está disputado; automação + performance é um dos cargos mais escassos.",
+      tip: "Foque em automação desde o início, mesmo que comece manual.",
+    },
+    {
+      question: "Qual certificação compensa fazer?",
+      answer:
+        "CTFL (ISTQB Foundation) é o padrão de entrada mais aceito. Depois, especializações como CTAL-TAE (automação) agregam valor real no currículo.",
+    },
+    {
+      question: "Cypress ou Playwright?",
+      answer:
+        "Ambos são excelentes. Cypress tem comunidade maior e curva mais suave; Playwright tem melhor performance e suporte nativo a multi-browser. Comece pelo Cypress e transite conforme necessário.",
+      tip: "O que você aprende em um, transfere 80% para o outro.",
+    },
+    {
+      question: "Quanto ganha um QA no Brasil?",
+      answer:
+        "Júnior: R$ 3.000-5.500. Pleno: R$ 6.000-10.000. Sênior com automação: R$ 11.000-18.000. Posições com SRE/performance passam dos R$ 20.000.",
+    },
+    {
+      question: "Devo escrever testes antes ou depois do código?",
+      answer:
+        "Se você é QA, ajuda a escrever os cenários ANTES junto com o time — isso é BDD. Não precisa implementar os scripts ainda, mas documente os cenários em Gherkin.",
+    },
+    {
+      question: "O que é 'flaky test' e por que assusta tanto?",
+      answer:
+        "É um teste que passa em uma execução e falha em outra, sem mudança no código. Destroem a confiança no pipeline. Sempre investigue — geralmente é tempo de espera ou dependência externa.",
+      tip: "Nunca use `sleep(5000)`. Use 'espera explícita' pelo elemento estar presente.",
     },
   ],
 };
@@ -846,6 +1019,83 @@ const analystContent: WorkspaceProfession = {
       cta: "Iniciar documentação da Demanda 1",
     },
   ],
+  mentorQuestions: [
+    {
+      id: "an-q1",
+      question: "Qual a diferença entre analista de negócios e Product Owner?",
+      shortAnswer:
+        "O PO é dono do produto — decide o 'o quê' e a prioridade. O analista apoia o PO descobrindo, documentando e refinando os requisitos. Em times menores, a mesma pessoa faz os dois papéis.",
+      guidance:
+        "Foque em dominar escuta ativa, escrita de histórias e modelagem. Com o tempo, essa base te leva naturalmente ao papel de PO.",
+      example:
+        "No DevSim, o NPC Product Owner define que a Demanda 1 é 'levantamento de requisitos'. Você, analista, conduz as entrevistas e escreve as histórias.",
+    },
+    {
+      id: "an-q2",
+      question: "O que significa 'história INVEST'?",
+      shortAnswer:
+        "INVEST são 6 critérios de uma boa user story: Independente, Negociável, Valiosa, Estimável, Smáll (pequena) e Testável.",
+      guidance:
+        "Ao escrever cada história, marque mentalmente os 6 critérios. Se falta algum, a história ainda não está pronta.",
+      example:
+        "História ruim: 'Login'. História INVEST: 'Como usuário, quero fazer login com e-mail e senha para acessar meu painel, com mensagem clara de erro se a senha estiver errada.'",
+    },
+    {
+      id: "an-q3",
+      question: "O stakeholder mudou de ideia no meio da sprint. E agora?",
+      shortAnswer:
+        "Mudança é normal. Avalie o impacto: se é pequena, negocie com o time. Se é grande, leve para a Retrospectiva/próxima Planning e não interrompa a sprint atual.",
+      guidance:
+        "Nunca diga 'não' de primeira nem 'sim' sem consultar o time. Use: 'entendi, deixa eu validar o impacto com o time e te trago na daily de amanhã'.",
+      example:
+        "Na Demanda 1 do DevSim, o NPC Stakeholder pede um campo novo. Você responde: 'vou incluir no backlog para próxima sprint, pois a atual já está em execução.'",
+    },
+    {
+      id: "an-q4",
+      question: "Como documentar requisitos sem virar burocracia?",
+      shortAnswer:
+        "Documente o mínimo necessário para o time entender e o stakeholder aceitar. História + critérios de aceite + fluxo resolvem 90% dos casos.",
+      guidance:
+        "Evite documentos de 20 páginas. Use Notion ou Jira com links cruzados. Se ninguém lê, não serve.",
+      example:
+        "No DevSim, uma história no Jira + 1 diagrama no Miro + 3 critérios em Gherkin é mais do que suficiente para a Demanda 1.",
+    },
+  ],
+  faq: [
+    {
+      question: "Analista precisa saber programar?",
+      answer:
+        "Não obrigatoriamente, mas SQL básico e leitura de código abrem portas. Analistas que entendem tecnicamente o produto negociam muito melhor com o time técnico.",
+      tip: "Aprenda SQL e Git no nível de leitura. Isso já te coloca à frente de 70% dos analistas.",
+    },
+    {
+      question: "Qual a diferença entre analista de negócios e de sistemas?",
+      answer:
+        "Analista de negócios foca no 'porquê' e no 'o quê' (regras, processos). Analista de sistemas foca no 'como' técnico (fluxos, integrações, estrutura de dados). Em empresas ágeis, os papéis se misturam.",
+    },
+    {
+      question: "Preciso fazer certificações?",
+      answer:
+        "CBAP (IIBA) e PSPO (Scrum.org) são as mais valorizadas. CBAP para carreira tradicional, PSPO para times ágeis e produto.",
+    },
+    {
+      question: "O que mais pegou na minha primeira entrevista?",
+      answer:
+        "Case real: te dão um cenário ambíguo e pedem para você modelar ou escrever histórias. Treine fazendo isso antes — DevSim é um ótimo lugar para praticar.",
+      tip: "Prática resolve. Quanto mais demandas você documenta, mais natural fica.",
+    },
+    {
+      question: "Quanto ganha um analista no Brasil?",
+      answer:
+        "Júnior: R$ 3.500-6.000. Pleno: R$ 7.000-11.000. Sênior/PO: R$ 12.000-22.000. Setores como financeiro e saúde pagam acima da média.",
+    },
+    {
+      question: "Como lidar com stakeholder difícil?",
+      answer:
+        "Documente tudo por escrito. Seja transparente sobre prazos. Traga dados em vez de opiniões. E saiba dizer 'não posso fazer isso nesta sprint' com alternativas.",
+      tip: "Transforme conflito em colaboração perguntando: 'qual o problema de negócio que você quer resolver?'",
+    },
+  ],
 };
 
 // -----------------------------------------------------------------------------
@@ -1099,6 +1349,83 @@ const devopsContent: WorkspaceProfession = {
         ],
       },
       cta: "Iniciar configuração do pipeline",
+    },
+  ],
+  mentorQuestions: [
+    {
+      id: "ops-q1",
+      question: "Qual a diferença entre DevOps e SRE?",
+      shortAnswer:
+        "DevOps é cultura e práticas para aproximar dev e ops. SRE (Site Reliability Engineering) é uma implementação específica do Google, com foco em confiabilidade e métricas duras (SLO, SLA, error budget).",
+      guidance:
+        "Você começa por DevOps e naturalmente evolui para SRE quando domina métricas de confiabilidade.",
+      example:
+        "No DevSim, na Demanda 1 você constrói o pipeline CI/CD (DevOps). Em sprints futuras, você define SLOs para garantir uptime (SRE).",
+    },
+    {
+      id: "ops-q2",
+      question: "O que é CI/CD na prática?",
+      shortAnswer:
+        "CI (Integração Contínua): cada commit roda lint + testes automaticamente. CD (Entrega/Deploy Contínuo): o código aprovado vai pra produção sem intervenção manual.",
+      guidance:
+        "Comece pelo CI — pipeline com lint + testes. Depois adicione CD gradualmente, começando por ambientes de staging.",
+      example:
+        "Sua Demanda 1 é montar o CI: PR aberto dispara job no GitHub Actions. Merge na main só acontece se tudo estiver verde.",
+    },
+    {
+      id: "ops-q3",
+      question: "Docker e Kubernetes: preciso dos dois?",
+      shortAnswer:
+        "Docker é o empacotamento (container). Kubernetes é o orquestrador (executa muitos containers em escala). Para começar, Docker é obrigatório. Kubernetes só quando você tem muitos serviços.",
+      guidance:
+        "Domine Docker primeiro. K8s vem depois, quando você tiver motivo real de usar (multi-serviço, multi-ambiente).",
+      example:
+        "Na Demanda 1, você sobe um container Docker local com a aplicação. Kubernetes só apareceria em sprints futuras, com múltiplos serviços.",
+    },
+    {
+      id: "ops-q4",
+      question: "Como evitar que o pipeline fique lento?",
+      shortAnswer:
+        "Paralelize jobs que não dependem uns dos outros, use cache de dependências, rode só os testes afetados em PRs, e mantenha imagens Docker pequenas.",
+      guidance:
+        "Meta: pipeline de PR abaixo de 5 minutos. Acima disso, ninguém espera e começam a merger sem olhar.",
+      example:
+        "Na Demanda 1 você separa lint (30s), testes unitários (1min) e build (2min) em jobs paralelos — total de 2min em vez de 3:30.",
+    },
+  ],
+  faq: [
+    {
+      question: "Preciso ser desenvolvedor antes de virar DevOps?",
+      answer:
+        "Não é obrigatório, mas ter vivido a dor de fazer deploy manual ajuda MUITO. Muitos DevOps vêm de sysadmin. O importante é entender código o suficiente para conversar com devs.",
+      tip: "Aprenda a ler Python/Bash/YAML e você vai longe.",
+    },
+    {
+      question: "AWS, Azure ou GCP: por onde começar?",
+      answer:
+        "AWS é líder de mercado e tem mais vagas. Azure é forte em empresas que já usam Microsoft. GCP tem melhor experiência de dev mas menos vagas no Brasil. Comece pela AWS.",
+    },
+    {
+      question: "O que são as métricas DORA?",
+      answer:
+        "As 4 métricas que medem a saúde de um time de engenharia: frequência de deploy, lead time, taxa de falha de mudança e tempo para recuperar. São o 'KPI' do DevOps.",
+      tip: "Times de alto desempenho fazem deploy VARIAS vezes por dia, com lead time < 1 dia.",
+    },
+    {
+      question: "Quanto ganha um DevOps no Brasil?",
+      answer:
+        "Júnior: R$ 5.000-8.000. Pleno: R$ 10.000-16.000. Sênior: R$ 18.000-30.000. Uma das carreiras mais bem pagas da tecnologia hoje.",
+    },
+    {
+      question: "Terraform ou Pulumi?",
+      answer:
+        "Terraform domina o mercado (HCL é obrigatório em entrevistas). Pulumi deixa você usar Python/TS de verdade — ótimo se você vem de desenvolvimento. Aprenda Terraform primeiro.",
+    },
+    {
+      question: "O que é Infrastructure as Code (IaC)?",
+      answer:
+        "Descrever infra (servidores, redes, bancos) em arquivos de código versionados no Git, em vez de clicar em paineis. Todo DevOps moderno faz isso.",
+      tip: "Se amanhã seu servidor morre, IaC deixa você recriar tudo em minutos.",
     },
   ],
 };

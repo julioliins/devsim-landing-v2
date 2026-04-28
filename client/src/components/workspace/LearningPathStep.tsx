@@ -153,17 +153,42 @@ export default function LearningPathStep({
             </div>
           )}
 
-          <div className="flex flex-wrap items-center justify-end gap-2 pt-2 border-t border-border">
+          <div className="rounded-xl border border-dashed border-primary/30 bg-primary/5 p-4 md:p-5">
             {isComplete ? (
-              <Button variant="outline" size="sm" onClick={onReset} className="gap-2">
-                <RotateCcw className="h-4 w-4" />
-                Refazer etapa
-              </Button>
+              <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
+                <div className="flex items-start gap-3">
+                  <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground">
+                    <Check className="h-5 w-5" />
+                  </div>
+                  <div>
+                    <p className="text-sm font-semibold text-foreground">
+                      Etapa concluída!
+                    </p>
+                    <p className="text-xs text-muted-foreground mt-0.5">
+                      Você já pode avançar para a próxima etapa da trilha.
+                    </p>
+                  </div>
+                </div>
+                <Button variant="outline" size="sm" onClick={onReset} className="gap-2">
+                  <RotateCcw className="h-4 w-4" />
+                  Refazer etapa
+                </Button>
+              </div>
             ) : (
-              <Button onClick={onComplete} className="gap-2">
-                <Check className="h-4 w-4" />
-                {step.cta}
-              </Button>
+              <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
+                <div className="flex-1">
+                  <p className="text-sm font-semibold text-foreground">
+                    Assistiu ao conteúdo?
+                  </p>
+                  <p className="text-xs text-muted-foreground mt-0.5">
+                    Marque como concluído para liberar a próxima etapa da trilha.
+                  </p>
+                </div>
+                <Button onClick={onComplete} size="lg" className="gap-2 w-full md:w-auto">
+                  <Check className="h-4 w-4" />
+                  Concluir e avançar
+                </Button>
+              </div>
             )}
           </div>
         </div>

@@ -17,6 +17,8 @@ import { getWorkspaceContent } from "@/data/workspaceContent";
 import { useWorkspaceProgress } from "@/hooks/useWorkspaceProgress";
 import SprintTimeline from "@/components/workspace/SprintTimeline";
 import LearningPathStep from "@/components/workspace/LearningPathStep";
+import { MentorChat } from "@/components/workspace/MentorChat";
+import { FaqAccordion } from "@/components/workspace/FaqAccordion";
 
 export default function VirtualWorkspace() {
   const [, params] = useRoute<{ slug: string }>("/workspace/:slug");
@@ -288,7 +290,7 @@ export default function VirtualWorkspace() {
           </div>
 
           {allDone && (
-            <Card className="p-6 border-primary/30 bg-primary/5">
+            <Card className="p-6 border-primary/30 bg-primary/5" id="trilha-concluida">
               <div className="flex flex-col md:flex-row items-start md:items-center gap-4">
                 <div className="flex h-12 w-12 items-center justify-center rounded-full bg-primary/15 text-primary">
                   <Rocket className="h-6 w-6" />
@@ -313,6 +315,29 @@ export default function VirtualWorkspace() {
               </div>
             </Card>
           )}
+        </section>
+
+        {/* Mentor Dev Sim na Review */}
+        <section className="space-y-4" id="review-mentor">
+          <div>
+            <h2 className="text-xl font-bold text-foreground">
+              Review da Sprint · Converse com o mentor
+            </h2>
+            <p className="text-sm text-muted-foreground mt-1">
+              Na fase Review, você apresenta o que aprendeu e tira dúvidas.
+              Selecione uma pergunta abaixo e receba orientação do{" "}
+              <span className="font-medium text-foreground">Dev Sim</span>, seu mentor virtual.
+            </p>
+          </div>
+          <MentorChat
+            professionName={content.name}
+            questions={content.mentorQuestions}
+          />
+        </section>
+
+        {/* FAQ de mercado */}
+        <section className="space-y-4" id="faq">
+          <FaqAccordion professionName={content.name} items={content.faq} />
         </section>
       </div>
     </DashboardLayout>
