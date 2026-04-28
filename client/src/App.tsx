@@ -8,6 +8,7 @@ import Home from "./pages/Home";
 import Auth from "./pages/Auth";
 import Dashboard from "./pages/Dashboard";
 import CareerSelection from "./pages/CareerSelection";
+import VirtualWorkspace from "./pages/VirtualWorkspace";
 import MethodologySelection from "./pages/MethodologySelection";
 import SimulatorEnvironment from "./pages/SimulatorEnvironment";
 import SessionSummary from "./pages/SessionSummary";
@@ -23,6 +24,7 @@ function Router() {
       <Route path="/auth" component={Auth} />
       <Route path="/dashboard" component={Dashboard} />
       <Route path="/career-selection" component={CareerSelection} />
+      <Route path="/workspace/:slug" component={VirtualWorkspace} />
       <Route path="/methodology-selection" component={MethodologySelection} />
       <Route path="/simulator" component={SimulatorEnvironment} />
       <Route path="/session-summary" component={SessionSummary} />

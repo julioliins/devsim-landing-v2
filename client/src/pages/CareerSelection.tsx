@@ -3,41 +3,50 @@ import { useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Code2, TestTube2, FileText, Zap, ArrowRight, Loader2 } from "lucide-react";
+import { Code2, TestTube2, FileText, Zap, ArrowRight, Loader2, Lock } from "lucide-react";
+import { toast } from "sonner";
 import DashboardLayout from "@/components/DashboardLayout";
 
 const careers = [
   {
     id: 1,
+    slug: "desenvolvedor",
     name: "Desenvolvedor",
     description: "Desenvolva aplicações, implemente features e resolva bugs em um ambiente ágil.",
     icon: Code2,
     color: "from-blue-500 to-blue-600",
     skills: ["Programação", "Problem Solving", "Git"],
+    available: true,
   },
   {
     id: 2,
+    slug: "tester",
     name: "Testador",
     description: "Garanta a qualidade do software através de testes automatizados e manuais.",
     icon: TestTube2,
     color: "from-green-500 to-green-600",
     skills: ["QA", "Testes Automatizados", "Documentação"],
+    available: false,
   },
   {
     id: 3,
+    slug: "analista",
     name: "Analista",
     description: "Analise requisitos, documente especificações e comunique com stakeholders.",
     icon: FileText,
     color: "from-purple-500 to-purple-600",
     skills: ["Análise", "Comunicação", "Documentação"],
+    available: false,
   },
   {
     id: 4,
+    slug: "devops",
     name: "DevOps",
     description: "Gerencie infraestrutura, deploy e monitoramento de aplicações.",
     icon: Zap,
     color: "from-orange-500 to-orange-600",
     skills: ["CI/CD", "Docker", "Monitoramento"],
+    available: false,
   },
 ];
 
@@ -47,12 +56,20 @@ export default function CareerSelection() {
   const [isLoading, setIsLoading] = useState(false);
 
   const handleSelectCareer = (careerId: number) => {
+    const career = careers.find((c) => c.id === careerId);
+    if (!career) return;
+    if (!career.available) {
+      toast.info("Em breve", {
+        description: `A simulação de ${career.name} estará disponível em breve.`,
+      });
+      return;
+    }
     setSelectedCareer(careerId);
     setIsLoading(true);
-    // Simulate navigation delay
+    // Navigate to virtual workspace for the selected profession
     setTimeout(() => {
-      setLocation(`/simulator/methodology?career=${careerId}`);
-    }, 500);
+      setLocation(`/workspace/${career.slug}`);
+    }, 400);
   };
 
   return (
@@ -74,9 +91,16 @@ export default function CareerSelection() {
                   isSelected
                     ? "ring-2 ring-primary shadow-lg scale-105"
                     : "hover:shadow-md hover:scale-102"
-                }`}
+                } ${!career.available ? "opacity-75" : ""}`}
                 onClick={() => handleSelectCareer(career.id)}
               >
+                {!career.available && (
+                  <div className="absolute top-4 right-4 z-10">
+                    <Badge variant="secondary" className="gap-1">
+                      <Lock className="w-3 h-3" /> Em breve
+                    </Badge>
+                  </div>
+                )}
                 {/* Background Gradient */}
                 <div
                   className={`absolute inset-0 bg-gradient-to-br ${career.color} opacity-5`}
@@ -109,7 +133,8 @@ export default function CareerSelection() {
                   {/* Button */}
                   <Button
                     className="w-full group"
-                    disabled={isLoading && isSelected}
+                    disabled={(isLoading && isSelected) || !career.available}
+                    variant={!career.available ? "secondary" : "default"}
                     onClick={(e: any) => {
                       e.stopPropagation();
                       handleSelectCareer(career.id);
@@ -120,9 +145,14 @@ export default function CareerSelection() {
                         <Loader2 className="w-4 h-4 mr-2 animate-spin" />
                         Carregando...
                       </>
+                    ) : !career.available ? (
+                      <>
+                        <Lock className="w-4 h-4 mr-2" />
+                        Em breve
+                      </>
                     ) : (
                       <>
-                        Começar Simulação
+                        Entrar na Área Virtual
                         <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition" />
                       </>
                     )}

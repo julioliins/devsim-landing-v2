@@ -148,3 +148,24 @@
 - [x] Remover sub-aba "Sessões Ativas" do SecuritySettings
 - [x] Remover seção/card de Sessões Ativas
 - [x] 63 testes passando após simplificação
+
+
+## Área Virtual de Trabalho (Demanda 1 - Desenvolvedor)
+- [x] Corrigir erro 404 ao clicar em profissão — adicionada rota /workspace/:slug no App.tsx
+- [x] Redirecionar para /workspace/desenvolvedor ao clicar em "Desenvolvedor"
+- [x] Criar página VirtualWorkspace.tsx com DashboardLayout
+- [x] Seção hero: "Área Virtual de Trabalho DevSim" + subtítulo
+- [x] Card resumo da profissão ativa (Fase 1: O Desenvolvedor) com texto motivacional
+- [x] Timeline visual Sprint 2 Semanas (Planning → Execução → Review → Retro)
+- [x] Indicador "Demanda 1: Configuração de Ambiente" como sprint atual
+- [x] Trilha de aprendizado com 3 etapas sequenciais:
+  - [x] Etapa 1: "O que é a profissão" (desbloqueado) — texto + vídeo YouTube embedado
+  - [x] Etapa 2: "Quais aplicativos/ferramentas" (desbloqueado após Etapa 1) — cards (Node.js, Terminal, Postman, VS Code, Git, Docker) + vídeos YouTube
+  - [x] Etapa 3: "Codificando a Demanda 1" (bloqueado até concluir Etapas 1 e 2) — overlay cadeado
+- [x] Modal/Player YouTube customizado (iframe embed) para assistir sem sair do portal
+- [x] Persistência de progresso da trilha em localStorage
+- [x] Botão "Marcar como concluído" em cada etapa
+- [x] Visual de progresso (0-100%) com barra
+- [x] Manter identidade visual DevSim (azul #2563eb, cards com sombra)
+- [x] Testes passando (83 testes — 20 novos)
+- [x] Criar checkpoint final
