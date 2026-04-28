@@ -169,3 +169,13 @@
 - [x] Manter identidade visual DevSim (azul #2563eb, cards com sombra)
 - [x] Testes passando (83 testes — 20 novos)
 - [x] Criar checkpoint final
+
+
+## Expansão das Áreas Virtuais (Tester, Analista, DevOps)
+- [x] Criar conteúdo do Testador em workspaceContent.ts (sprint, demanda 1, ferramentas, trilha 3 etapas com vídeos)
+- [x] Criar conteúdo do Analista em workspaceContent.ts
+- [x] Criar conteúdo do DevOps em workspaceContent.ts
+- [x] Habilitar todas as profissões em CareerSelection (removidos badge "Em breve" e cadeado)
+- [x] Redirect funcional para todas as profissões via /workspace/:slug
+- [x] Testes atualizados validando as 4 profissões (86 testes passando)
+- [x] Checkpoint criado

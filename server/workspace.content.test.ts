@@ -20,10 +20,37 @@ describe("Workspace Content (Área Virtual)", () => {
     expect(a?.slug).toBe(c?.slug);
   });
 
-  it("retorna null para profissões não disponíveis", () => {
-    expect(getWorkspaceContent("tester")).toBeNull();
-    expect(getWorkspaceContent("analista")).toBeNull();
+  it("retorna conteúdo para todas as 4 profissões disponíveis", () => {
+    expect(getWorkspaceContent("desenvolvedor")).not.toBeNull();
+    expect(getWorkspaceContent("tester")).not.toBeNull();
+    expect(getWorkspaceContent("analista")).not.toBeNull();
+    expect(getWorkspaceContent("devops")).not.toBeNull();
+  });
+
+  it("retorna null apenas para profissões inexistentes", () => {
     expect(getWorkspaceContent("inexistente")).toBeNull();
+    expect(getWorkspaceContent("random")).toBeNull();
+  });
+
+  it("cada profissão possui sprint, demanda atual e trilha sequencial completa", () => {
+    const slugs = ["desenvolvedor", "tester", "analista", "devops"];
+    slugs.forEach((slug) => {
+      const content = getWorkspaceContent(slug);
+      expect(content, `slug ${slug}`).not.toBeNull();
+      expect(content!.sprint.length, `sprint ${slug}`).toBe(4);
+      expect(content!.learningPath.length, `trilha ${slug}`).toBe(3);
+      expect(content!.currentDemand.number).toBe(1);
+      expect(content!.tools.length).toBeGreaterThanOrEqual(4);
+    });
+  });
+
+  it("todas as profissões têm etapa 3 bloqueada por etapas 1 e 2", () => {
+    const slugs = ["desenvolvedor", "tester", "analista", "devops"];
+    slugs.forEach((slug) => {
+      const content = getWorkspaceContent(slug);
+      const step3 = content!.learningPath.find((s) => s.order === 3)!;
+      expect(step3.requiresCompletionOf.length, `step3 ${slug}`).toBe(2);
+    });
   });
 
   it("possui exatamente 3 etapas na trilha de aprendizado", () => {
@@ -98,9 +125,13 @@ describe("Workspace Content (Área Virtual)", () => {
     expect(names.some((n) => n.includes("Postman"))).toBe(true);
   });
 
-  it("WORKSPACE_CONTENT é um registry consistente", () => {
-    expect(WORKSPACE_CONTENT.desenvolvedor).toBeTruthy();
-    expect(Object.keys(WORKSPACE_CONTENT)).toContain("desenvolvedor");
+  it("WORKSPACE_CONTENT inclui todas as 4 profissões", () => {
+    expect(Object.keys(WORKSPACE_CONTENT).sort()).toEqual([
+      "analista",
+      "desenvolvedor",
+      "devops",
+      "tester",
+    ]);
   });
 });
 

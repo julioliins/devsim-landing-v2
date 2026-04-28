@@ -26,7 +26,7 @@ const careers = [
     icon: TestTube2,
     color: "from-green-500 to-green-600",
     skills: ["QA", "Testes Automatizados", "Documentação"],
-    available: false,
+    available: true,
   },
   {
     id: 3,
@@ -36,7 +36,7 @@ const careers = [
     icon: FileText,
     color: "from-purple-500 to-purple-600",
     skills: ["Análise", "Comunicação", "Documentação"],
-    available: false,
+    available: true,
   },
   {
     id: 4,
@@ -46,7 +46,7 @@ const careers = [
     icon: Zap,
     color: "from-orange-500 to-orange-600",
     skills: ["CI/CD", "Docker", "Monitoramento"],
-    available: false,
+    available: true,
   },
 ];
 
