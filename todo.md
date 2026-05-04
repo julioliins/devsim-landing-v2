@@ -192,3 +192,16 @@
 - [x] FaqAccordion integrado ao final da página
 - [x] Testes adicionados (89 testes passando, 3 novos)
 - [x] Checkpoint criado
+
+
+## Editor de Código em Tarefas Disponíveis
+- [x] Tipo TaskDefinition com language, starterCode e checks declarativos
+- [x] Checks da tarefa Login (regex de e-mail, length de senha, hash, função, mensagem de erro)
+- [x] Checks das outras 2 tarefas (SQL otimizado, review estruturado)
+- [x] Componente TaskCodeEditor com textarea monoespaçado + botões Verificar e Submeter
+- [x] runChecks executa regex/keyword e retorna passed/total/allPassed
+- [x] Resumo visual com Progress, lista de checks e dicas para os que falharam
+- [x] Botão de submeter só libera quando allPassed
+- [x] Integrado abaixo do chat no SimulatorEnvironment (lista lateral abre o editor)
+- [x] 9 testes para runChecks e cobertura das 3 tarefas (98 testes totais)
+- [x] Checkpoint criado
