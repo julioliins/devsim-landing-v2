@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { Code2, Users, Zap, Shield, BookOpen, Rocket } from "lucide-react";
+import { Code2, Users, Zap, Shield, BookOpen, Rocket, Instagram } from "lucide-react";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { useLocation } from "wouter";
 
@@ -265,7 +265,17 @@ export default function Home() {
               </ul>
             </div>
           </div>
-          <div className="border-t border-border pt-8 text-center text-sm text-muted-foreground">
+          <div className="border-t border-border pt-8 flex flex-col items-center gap-4 text-sm text-muted-foreground">
+            <a
+              href="https://www.instagram.com/devsim26/"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Siga a DevSim Studios no Instagram"
+              title="@devsim26 no Instagram"
+              className="inline-flex h-11 w-11 items-center justify-center rounded-full bg-gradient-to-br from-fuchsia-500 via-pink-500 to-amber-400 text-white shadow-md transition-transform hover:scale-110 hover:shadow-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-pink-500 focus-visible:ring-offset-2"
+            >
+              <Instagram className="h-5 w-5" />
+            </a>
             <p>&copy; 2026 DevSim Studios. Todos os direitos reservados.</p>
           </div>
         </div>

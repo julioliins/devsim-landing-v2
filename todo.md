@@ -205,3 +205,8 @@
 - [x] Integrado abaixo do chat no SimulatorEnvironment (lista lateral abre o editor)
 - [x] 9 testes para runChecks e cobertura das 3 tarefas (98 testes totais)
 - [x] Checkpoint criado
+
+
+## Rede social no rodapé
+- [x] Ícone do Instagram adicionado no rodapé com link para https://www.instagram.com/devsim26/ (gradiente Insta, target=_blank, rel="noopener noreferrer", aria-label)
+- [x] Checkpoint criado
