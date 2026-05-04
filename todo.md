@@ -221,6 +221,18 @@
 
 
 ## Contato e Publicação no GitHub
-- [ ] Atualizar contato direto para devisim26@gmail.com (mailto:)
-- [ ] Substituir texto "Instagram" da seção Contato por ícone clicável (link para @devsim26)
-- [ ] Publicar versão final em repositório GitHub privado
+- [x] Seção #contact criada com Card Contato Direto (mailto:devisim26@gmail.com)
+- [x] Card Redes Sociais com ícone clicável do Instagram (@devsim26)
+- [x] Link Contato do rodapé e do menu agora apontam para #contact
+- [x] Repositório privado publicado em https://github.com/julioliins/devsim-landing-v2
+
+
+## Publicar em julioliins/devsim-landing
+- [x] Repositório existente (público) confirmado em https://github.com/julioliins/devsim-landing
+- [x] Remote `devsim-landing` adicionado e push forçado da branch main (commit a7ae57b)
+- [x] Branch `gh-pages` antiga preservada
+
+
+## README de apresentação (pitch 10 min)
+- [ ] Escrever README focado em pitch para 3 pessoas
+- [ ] Push para julioliins/devsim-landing e julioliins/devsim-landing-v2
