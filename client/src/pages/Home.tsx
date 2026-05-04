@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { Code2, Users, Zap, Shield, BookOpen, Rocket, Instagram } from "lucide-react";
+import { Code2, Users, Zap, Shield, BookOpen, Rocket, Instagram, Mail } from "lucide-react";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { useLocation } from "wouter";
 
@@ -232,6 +232,57 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Contato */}
+      <section id="contact" className="py-20 bg-card/40">
+        <div className="container">
+          <div className="max-w-4xl mx-auto text-center mb-12">
+            <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-3">Entre em Contato</h2>
+            <p className="text-muted-foreground text-lg">
+              Quer falar com a gente? Mande um e-mail ou siga a DevSim Studios nas redes.
+            </p>
+          </div>
+
+          <div className="max-w-3xl mx-auto grid md:grid-cols-2 gap-6">
+            {/* Contato Direto */}
+            <Card className="p-8">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
+                  <Mail className="w-5 h-5 text-primary" />
+                </div>
+                <h3 className="text-lg font-semibold text-foreground">Contato Direto</h3>
+              </div>
+              <a
+                href="mailto:devisim26@gmail.com"
+                className="text-primary hover:underline break-all"
+              >
+                devisim26@gmail.com
+              </a>
+              <p className="text-sm text-muted-foreground mt-3">
+                Respondemos em até 2 dias úteis.
+              </p>
+            </Card>
+
+            {/* Redes Sociais */}
+            <Card className="p-8">
+              <h3 className="text-lg font-semibold text-foreground mb-4">Redes Sociais</h3>
+              <div className="flex items-center gap-3">
+                <a
+                  href="https://www.instagram.com/devsim26/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="Siga a DevSim Studios no Instagram"
+                  title="@devsim26 no Instagram"
+                  className="inline-flex h-11 w-11 items-center justify-center rounded-full bg-gradient-to-br from-fuchsia-500 via-pink-500 to-amber-400 text-white shadow-md transition-transform hover:scale-110 hover:shadow-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-pink-500 focus-visible:ring-offset-2"
+                >
+                  <Instagram className="h-5 w-5" />
+                </a>
+                <span className="text-sm text-muted-foreground">@devsim26</span>
+              </div>
+            </Card>
+          </div>
+        </div>
+      </section>
+
       {/* Footer */}
       <footer className="py-12 border-t border-border bg-card/50">
         <div className="container">
@@ -253,7 +304,7 @@ export default function Home() {
               <ul className="space-y-2 text-sm text-muted-foreground">
                 <li><a href="#about" className="hover:text-foreground transition">Sobre</a></li>
                 <li><a href="#" className="hover:text-foreground transition">Blog</a></li>
-                <li><a href="#" className="hover:text-foreground transition">Contato</a></li>
+                <li><a href="#contact" className="hover:text-foreground transition">Contato</a></li>
               </ul>
             </div>
             <div>

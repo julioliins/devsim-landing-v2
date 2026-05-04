@@ -218,3 +218,9 @@
 - [x] Só abre o diálogo se houver progresso real (pontos, tarefa aberta ou interações)
 - [x] 100 testes passando, TypeScript ok, Radix AlertDialog já disponível
 - [x] Checkpoint criado
+
+
+## Contato e Publicação no GitHub
+- [ ] Atualizar contato direto para devisim26@gmail.com (mailto:)
+- [ ] Substituir texto "Instagram" da seção Contato por ícone clicável (link para @devsim26)
+- [ ] Publicar versão final em repositório GitHub privado
