@@ -11,6 +11,16 @@ import {
   SIMULATOR_TASKS,
   type TaskDefinition,
 } from "@/data/simulatorTasks";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 
 interface Message {
   id: string;
@@ -39,7 +49,29 @@ export default function SimulatorEnvironment() {
   const [completedTaskIds, setCompletedTaskIds] = useState<number[]>([]);
   const [score, setScore] = useState(0);
   const [sessionTime, setSessionTime] = useState(0);
+  const [showLeaveDialog, setShowLeaveDialog] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
+
+  // Considera que há progresso quando o usuário já ganhou pontos,
+  // está com tarefa aberta ou trocou mensagens com o NPC.
+  const hasProgress =
+    score > 0 ||
+    completedTaskIds.length > 0 ||
+    currentTask !== null ||
+    messages.length > 1;
+
+  const handleLeaveAttempt = () => {
+    if (hasProgress) {
+      setShowLeaveDialog(true);
+    } else {
+      confirmLeave();
+    }
+  };
+
+  const confirmLeave = () => {
+    setShowLeaveDialog(false);
+    setLocation("/career-selection");
+  };
 
   const tasks: TaskDefinition[] = SIMULATOR_TASKS;
 
@@ -63,6 +95,18 @@ export default function SimulatorEnvironment() {
     }, 1000);
     return () => clearInterval(timer);
   }, []);
+
+  // Avisa antes de fechar/atualizar a aba se houver progresso
+  useEffect(() => {
+    const beforeUnload = (e: BeforeUnloadEvent) => {
+      if (!hasProgress) return;
+      e.preventDefault();
+      // Necessário em alguns navegadores legados
+      e.returnValue = "";
+    };
+    window.addEventListener("beforeunload", beforeUnload);
+    return () => window.removeEventListener("beforeunload", beforeUnload);
+  }, [hasProgress]);
 
   const handleSendMessage = (e: React.FormEvent) => {
     e.preventDefault();
@@ -132,7 +176,8 @@ export default function SimulatorEnvironment() {
               <Button
                 variant="ghost"
                 size="icon"
-                onClick={() => setLocation("/simulator/careers")}
+                onClick={handleLeaveAttempt}
+                aria-label="Voltar para seleção de carreira"
               >
                 <ChevronLeft className="w-5 h-5" />
               </Button>
@@ -315,6 +360,35 @@ export default function SimulatorEnvironment() {
               })}
             </div>
           </Card>
+
+          {/* Diálogo de confirmação de abandono */}
+          <AlertDialog open={showLeaveDialog} onOpenChange={setShowLeaveDialog}>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>Abandonar a jornada?</AlertDialogTitle>
+                <AlertDialogDescription>
+                  Você já acumulou{" "}
+                  <span className="font-semibold text-foreground">{score} pts</span>
+                  {completedTaskIds.length > 0
+                    ? ` e completou ${completedTaskIds.length} tarefa${
+                        completedTaskIds.length > 1 ? "s" : ""
+                      }`
+                    : ""}
+                  . Se sair agora, esse progresso não será salvo. Tem certeza que
+                  deseja voltar para a seleção de carreira?
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel>Não, continuar</AlertDialogCancel>
+                <AlertDialogAction
+                  onClick={confirmLeave}
+                  className="bg-red-600 hover:bg-red-700 focus-visible:ring-red-600"
+                >
+                  Sim, abandonar
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
 
           {/* Curiosity */}
           <Card className="p-6 bg-gradient-to-br from-purple-50 to-pink-50 dark:from-purple-950 dark:to-pink-950 border-0">

@@ -54,7 +54,7 @@ export default function SessionSummary() {
     // Simulate API call
     setTimeout(() => {
       setIsSubmitting(false);
-      setLocation("/simulator/careers");
+      setLocation("/career-selection");
     }, 1500);
   };
 
@@ -175,7 +175,7 @@ export default function SessionSummary() {
               <div className="flex gap-3">
                 <Button
                   variant="outline"
-                  onClick={() => setLocation("/simulator/careers")}
+                  onClick={() => setLocation("/career-selection")}
                   className="flex-1"
                 >
                   <Home className="w-4 h-4 mr-2" />

@@ -210,3 +210,11 @@
 ## Rede social no rodapé
 - [x] Ícone do Instagram adicionado no rodapé com link para https://www.instagram.com/devsim26/ (gradiente Insta, target=_blank, rel="noopener noreferrer", aria-label)
 - [x] Checkpoint criado
+
+
+## Voltar do Simulador (404 + confirmação de abandono)
+- [x] Rota inexistente /simulator/careers substituída por /career-selection no SimulatorEnvironment e SessionSummary (3 ocorrências)
+- [x] AlertDialog Sim/Não de "Abandonar a jornada?" antes de voltar, exibindo pontos e tarefas concluídas
+- [x] Só abre o diálogo se houver progresso real (pontos, tarefa aberta ou interações)
+- [x] 100 testes passando, TypeScript ok, Radix AlertDialog já disponível
+- [x] Checkpoint criado
