@@ -234,5 +234,27 @@
 
 
 ## README de apresentação (pitch 10 min)
-- [ ] Escrever README focado em pitch para 3 pessoas
-- [ ] Push para julioliins/devsim-landing e julioliins/devsim-landing-v2
+- [x] README escrito com roteiro por blocos de tempo, problema/solução, demo ao vivo, diferenciais e métricas
+- [x] Push realizado em julioliins/devsim-landing (commit a31ffc8) e julioliins/devsim-landing-v2
+
+
+## Download do projeto
+- [x] ZIP gerado em /home/ubuntu/Downloads/devsim-landing.zip (342 KB, sem node_modules)
+- [x] Instruções de uso (clone e ZIP) enviadas
+
+
+## Reformulação da Landing (rubrica + Start Bootstrap)
+- [ ] Definir conteúdo: história, propósito, MVV, equipe (Julio, Alexandre, Carlos), modelo comercial gratuito/educacional
+- [ ] Sessão Hero estilo Start Bootstrap (texto à esquerda, imagem/mascote à direita)
+- [ ] Sessão Sobre a Empresa (quem somos, propósito)
+- [ ] Sessão Missão, Visão e Valores
+- [ ] Sessão Equipe (organograma com 3 membros)
+- [ ] Sessão Produto (nome, logo, descrição, público-alvo)
+- [ ] Sessão Funcionalidades (3-4 cards alternados estilo Start Bootstrap)
+- [ ] Sessão Diferenciais Competitivos
+- [ ] Sessão Como Acessar (modelo gratuito/educacional + plataformas)
+- [ ] Sessão Fluxo de Uso (passo a passo de 3-4 etapas)
+- [ ] Sessão Contato (e-mail + Instagram)
+- [ ] Footer com links e CTAs
+- [ ] Gerar 3 posts iniciais para Instagram com identidade DevSim
+- [ ] Push para GitHub e checkpoint
