@@ -74,6 +74,9 @@ export const company = {
 
 export const product = {
   name: "DevSim — Plataforma de Simulação de Carreira",
+  shortName: "DevSim",
+  logoBadge: "DS",
+  tagline: "O simulador oficial de carreira em tecnologia da DevSim Studios.",
   description:
     "Um simulador de carreira em tecnologia que coloca o aluno dentro de um squad virtual rodando sprints quinzenais. Em cada sprint ele aprende a profissão, escolhe ferramentas, conversa com o mentor Dev Sim e entrega tarefas avaliadas automaticamente.",
   audience: [
@@ -159,9 +162,15 @@ export const product = {
     title: "Acesso Educacional Gratuito",
     description:
       "Durante a fase atual de validação, todas as funcionalidades estão disponíveis gratuitamente para estudantes e instituições parceiras. Nosso compromisso é manter um caminho de aprendizado acessível enquanto evoluímos o produto com base no feedback da comunidade.",
+    howToContract: [
+      "Estudantes individuais: clique em 'Teste Agora' e faça o cadastro gratuito — acesso liberado em segundos.",
+      "Instituições de ensino: solicite uma demonstração e receba uma proposta de parceria personalizada.",
+      "Empresas: entre em contato para customizar trilhas de onboarding e mapear talentos da plataforma.",
+    ],
     cta: {
-      primary: "Comece a Praticar Gratuitamente",
+      primary: "Teste Agora Gratuitamente",
       secondary: "Solicite uma Demonstração",
+      tertiary: "Saiba Mais",
     },
     perks: [
       "Acesso completo às quatro carreiras.",

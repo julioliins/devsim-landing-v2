@@ -259,3 +259,17 @@
 - [x] 3 posts gerados (apresentação, produto, valor) + INSTAGRAM_POSTS.md com legendas
 - [x] 12 testes adicionais (112 testes totais passando)
 - [ ] Push para GitHub e checkpoint final
+
+
+## Reorganização da Landing seguindo rubrica (a → b → c → d)
+- [ ] Mapear conteúdo atual do Home.tsx vs rubrica
+- [ ] Seção Sobre (a): Quem Somos + História + Propósito + Identidade da marca (logo + mascote)
+- [ ] Seção M.V.V. (a): bloco dedicado com Missão, Visão e Valores
+- [ ] Seção Equipe (a): organograma visual com hierarquia (não só cards lado a lado)
+- [ ] Seção Produto (b): nome + logotipo + descrição + público-alvo + funcionalidades + diferenciais competitivos (todos os 5 sub-bullets)
+- [ ] Seção Acesso (c): como contratar/utilizar + plataformas (web/mobile) + demonstração do fluxo de uso (passo a passo visual)
+- [ ] Seção Contato (a): e-mail + redes sociais + formulário funcional
+- [ ] Reforço de CTAs (d): "Saiba mais", "Teste agora", "Entre em contato" distribuídos pela página
+- [ ] Manter ordem do menu superior (Sobre, M.V.V., Equipe, Produto, Acesso, Contato)
+- [ ] Atualizar testes para validar presença de cada bullet da rubrica
+- [ ] Push para GitHub e checkpoint final

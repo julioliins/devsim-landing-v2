@@ -24,6 +24,8 @@ import { useAuth } from "@/_core/hooks/useAuth";
 import { useLocation } from "wouter";
 import { company, product } from "@/data/companyInfo";
 import { MASCOT_IMAGE_URL } from "@/lib/mascot";
+import OrgChart from "@/components/landing/OrgChart";
+import ContactForm from "@/components/landing/ContactForm";
 
 const featureIcons: Record<string, typeof Users> = {
   Users,
@@ -280,29 +282,30 @@ export default function Home() {
               Co-fundadores que combinam tecnologia, produto e comunidade para construir o DevSim.
             </p>
           </div>
-          <div className="grid md:grid-cols-3 gap-6">
-            {company.team.map((member) => (
-              <Card key={member.name} className="p-6 text-center border-border">
-                <div className="w-24 h-24 mx-auto mb-4 rounded-full bg-gradient-to-br from-primary to-cyan-500 flex items-center justify-center text-white text-2xl font-bold shadow-md">
-                  {member.initials}
-                </div>
-                <h3 className="font-bold text-lg text-foreground">{member.name}</h3>
-                <p className="text-sm font-medium text-primary mb-2">{member.role}</p>
-                <p className="text-sm text-muted-foreground leading-relaxed">{member.bio}</p>
-              </Card>
-            ))}
-          </div>
+          <OrgChart members={company.team} />
         </div>
       </section>
 
       {/* Produto */}
       <section id="product" className="py-20 md:py-24 bg-card/50">
         <div className="container">
-          <div className="text-center space-y-3 mb-12">
+          <div className="text-center space-y-3 mb-10">
             <p className="text-sm font-semibold text-primary uppercase tracking-wider">O Produto</p>
             <h2 className="text-3xl md:text-4xl font-bold text-foreground">{product.name}</h2>
             <p className="text-muted-foreground text-lg max-w-3xl mx-auto">{product.description}</p>
           </div>
+
+          {/* Logotipo do produto + tagline */}
+          <Card className="max-w-3xl mx-auto p-6 mb-12 flex flex-col sm:flex-row items-center gap-5 border-primary/30 bg-gradient-to-br from-primary/5 to-cyan-500/5">
+            <div className="shrink-0 w-20 h-20 rounded-2xl bg-gradient-to-br from-primary to-cyan-500 flex items-center justify-center text-white font-extrabold text-2xl shadow-lg">
+              {product.logoBadge}
+            </div>
+            <div className="text-center sm:text-left">
+              <p className="text-xs font-semibold text-primary uppercase tracking-wider mb-1">Logotipo do produto</p>
+              <h3 className="text-xl font-bold text-foreground">{product.shortName}</h3>
+              <p className="text-sm text-muted-foreground mt-1">{product.tagline}</p>
+            </div>
+          </Card>
 
           {/* Público-alvo */}
           <div className="max-w-4xl mx-auto mb-14">
@@ -375,7 +378,7 @@ export default function Home() {
           </div>
 
           {/* Card de oferta */}
-          <Card className="p-8 md:p-10 mb-12 bg-gradient-to-br from-primary/10 via-background to-cyan-500/5 border-primary/30">
+          <Card className="p-8 md:p-10 mb-10 bg-gradient-to-br from-primary/10 via-background to-cyan-500/5 border-primary/30">
             <div className="grid md:grid-cols-3 gap-8 items-center">
               <div className="md:col-span-2 space-y-4">
                 <h3 className="text-2xl font-bold text-foreground">{product.pricing.title}</h3>
@@ -405,11 +408,36 @@ export default function Home() {
                     el?.scrollIntoView({ behavior: "smooth" });
                   }}
                 >
-                  Falar com a equipe
+                  {product.pricing.cta.secondary}
+                </Button>
+                <Button
+                  size="lg"
+                  variant="ghost"
+                  onClick={() => {
+                    const el = document.getElementById("product");
+                    el?.scrollIntoView({ behavior: "smooth" });
+                  }}
+                >
+                  {product.pricing.cta.tertiary}
                 </Button>
               </div>
             </div>
           </Card>
+
+          {/* Como contratar / utilizar */}
+          <div className="max-w-4xl mx-auto mb-12">
+            <h3 className="text-xl font-bold text-foreground mb-4 text-center">Como contratar ou utilizar</h3>
+            <div className="grid md:grid-cols-3 gap-4">
+              {product.pricing.howToContract.map((line, i) => (
+                <Card key={i} className="p-5 border-border">
+                  <div className="w-8 h-8 rounded-full bg-primary text-primary-foreground flex items-center justify-center font-bold text-sm mb-3">
+                    {i + 1}
+                  </div>
+                  <p className="text-sm text-muted-foreground leading-relaxed">{line}</p>
+                </Card>
+              ))}
+            </div>
+          </div>
 
           {/* Plataformas */}
           <div className="grid md:grid-cols-2 gap-6 mb-12">
@@ -537,41 +565,49 @@ export default function Home() {
             </p>
           </div>
 
-          <div className="max-w-3xl mx-auto grid md:grid-cols-2 gap-6">
-            <Card className="p-7">
-              <div className="flex items-center gap-3 mb-3">
-                <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
-                  <Mail className="w-5 h-5 text-primary" />
+          <div className="max-w-6xl mx-auto grid lg:grid-cols-5 gap-6">
+            {/* Coluna esquerda: contato direto + redes */}
+            <div className="lg:col-span-2 space-y-6">
+              <Card className="p-7">
+                <div className="flex items-center gap-3 mb-3">
+                  <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
+                    <Mail className="w-5 h-5 text-primary" />
+                  </div>
+                  <h3 className="text-lg font-semibold text-foreground">Contato Direto</h3>
                 </div>
-                <h3 className="text-lg font-semibold text-foreground">Contato Direto</h3>
-              </div>
-              <a
-                href={`mailto:${company.contact.email}`}
-                className="text-primary hover:underline break-all"
-              >
-                {company.contact.email}
-              </a>
-              <p className="text-sm text-muted-foreground mt-3">Respondemos em até 2 dias úteis.</p>
-            </Card>
-
-            <Card className="p-7">
-              <h3 className="text-lg font-semibold text-foreground mb-4">Redes Sociais</h3>
-              <div className="flex items-center gap-3">
                 <a
-                  href={company.contact.instagram}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label="Siga a DevSim Studios no Instagram"
-                  className="inline-flex h-11 w-11 items-center justify-center rounded-full bg-gradient-to-br from-fuchsia-500 via-pink-500 to-amber-400 text-white shadow-md transition-transform hover:scale-110 hover:shadow-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-pink-500 focus-visible:ring-offset-2"
+                  href={`mailto:${company.contact.email}`}
+                  className="text-primary hover:underline break-all"
                 >
-                  <Instagram className="h-5 w-5" />
+                  {company.contact.email}
                 </a>
-                <span className="text-sm text-muted-foreground">{company.contact.instagramHandle}</span>
-              </div>
-              <p className="text-sm text-muted-foreground mt-4">
-                Acompanhe novidades, dicas de carreira e bastidores da plataforma.
-              </p>
-            </Card>
+                <p className="text-sm text-muted-foreground mt-3">Respondemos em até 2 dias úteis.</p>
+              </Card>
+
+              <Card className="p-7">
+                <h3 className="text-lg font-semibold text-foreground mb-4">Redes Sociais</h3>
+                <div className="flex items-center gap-3">
+                  <a
+                    href={company.contact.instagram}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label="Siga a DevSim Studios no Instagram"
+                    className="inline-flex h-11 w-11 items-center justify-center rounded-full bg-gradient-to-br from-fuchsia-500 via-pink-500 to-amber-400 text-white shadow-md transition-transform hover:scale-110 hover:shadow-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-pink-500 focus-visible:ring-offset-2"
+                  >
+                    <Instagram className="h-5 w-5" />
+                  </a>
+                  <span className="text-sm text-muted-foreground">{company.contact.instagramHandle}</span>
+                </div>
+                <p className="text-sm text-muted-foreground mt-4">
+                  Acompanhe novidades, dicas de carreira e bastidores da plataforma.
+                </p>
+              </Card>
+            </div>
+
+            {/* Coluna direita: formulário funcional */}
+            <div className="lg:col-span-3">
+              <ContactForm />
+            </div>
           </div>
         </div>
       </section>

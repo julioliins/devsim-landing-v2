@@ -85,3 +85,29 @@ describe("product (rubrica de apresentação do produto)", () => {
     expect(product.pricing.perks.length).toBeGreaterThanOrEqual(3);
   });
 });
+
+describe("product extras (logotipo, como contratar, CTAs)", () => {
+  it("tem logotipo do produto definido", () => {
+    expect(product.shortName).toBeTruthy();
+    expect(product.logoBadge).toBeTruthy();
+    expect(product.tagline).toBeTruthy();
+  });
+
+  it("explica como contratar/utilizar em ao menos 3 perfis", () => {
+    expect(product.pricing.howToContract.length).toBeGreaterThanOrEqual(3);
+  });
+
+  it("tem 3 CTAs distintos (primary, secondary, tertiary)", () => {
+    const cta = product.pricing.cta as { primary: string; secondary: string; tertiary?: string };
+    expect(cta.primary).toBeTruthy();
+    expect(cta.secondary).toBeTruthy();
+    expect(cta.tertiary).toBeTruthy();
+    expect(cta.primary).not.toBe(cta.secondary);
+  });
+});
+
+describe("organograma da equipe", () => {
+  it("primeiro membro é a liderança (CEO/Tech Lead/Fundador)", () => {
+    expect(company.team[0].role.toLowerCase()).toMatch(/lead|ceo|fundador/);
+  });
+});
