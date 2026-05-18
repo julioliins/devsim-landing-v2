@@ -258,18 +258,27 @@
 - [x] Footer com links de navegação e CTAs
 - [x] 3 posts gerados (apresentação, produto, valor) + INSTAGRAM_POSTS.md com legendas
 - [x] 12 testes adicionais (112 testes totais passando)
-- [ ] Push para GitHub e checkpoint final
+- [x] Push final em julioliins/devsim-landing (commit 4808b66) e julioliins/devsim-landing-v2 (force)
 
 
 ## Reorganização da Landing seguindo rubrica (a → b → c → d)
-- [ ] Mapear conteúdo atual do Home.tsx vs rubrica
-- [ ] Seção Sobre (a): Quem Somos + História + Propósito + Identidade da marca (logo + mascote)
-- [ ] Seção M.V.V. (a): bloco dedicado com Missão, Visão e Valores
-- [ ] Seção Equipe (a): organograma visual com hierarquia (não só cards lado a lado)
-- [ ] Seção Produto (b): nome + logotipo + descrição + público-alvo + funcionalidades + diferenciais competitivos (todos os 5 sub-bullets)
-- [ ] Seção Acesso (c): como contratar/utilizar + plataformas (web/mobile) + demonstração do fluxo de uso (passo a passo visual)
-- [ ] Seção Contato (a): e-mail + redes sociais + formulário funcional
-- [ ] Reforço de CTAs (d): "Saiba mais", "Teste agora", "Entre em contato" distribuídos pela página
-- [ ] Manter ordem do menu superior (Sobre, M.V.V., Equipe, Produto, Acesso, Contato)
-- [ ] Atualizar testes para validar presença de cada bullet da rubrica
-- [ ] Push para GitHub e checkpoint final
+- [x] Mapeamento de lacunas vs rubrica realizado
+- [x] Seção Sobre (a): Quem Somos + História (2 parágrafos) + Propósito + Identidade (logo da marca + mascote no Hero)
+- [x] Seção M.V.V. (a): Missão, Visão e 5 Valores em bloco dedicado
+- [x] Seção Equipe (a): organograma com hierarquia (CEO no topo + linhas conectoras + co-fundadores)
+- [x] Seção Produto (b): nome + logotipo do produto separado + descrição + público-alvo + 6 funcionalidades + 4 diferenciais
+- [x] Seção Acesso (c): "Como contratar/utilizar" para 3 perfis + plataformas web/mobile + fluxo de uso em 4 passos
+- [x] Seção Contato (a): e-mail + Instagram + formulário funcional (mailto)
+- [x] Reforço de CTAs (d): "Teste Agora", "Solicite uma Demonstração" e "Saiba Mais" distribuídos na página
+- [x] Ordem do menu superior preservada (Sobre, M.V.V., Equipe, Produto, Acesso, Contato)
+- [x] 4 testes adicionais (116 testes totais)
+- [x] Push final feito em ambos os repositórios
+
+
+## Ajustes visuais (header, menu unificado, blocos removidos)
+- [ ] Logo maior no header (40-48px) sem label "DevSim Studios"
+- [ ] Unificar menu Sobre + M.V.V. + Equipe em "Quem somos" (ancoragem #quem-somos)
+- [ ] Remover bloco "Logotipo do Produto" da seção Produto
+- [ ] Remover bloco "Identidade da marca" (cores) da seção Sobre
+- [ ] Adicionar imagens reais para os 6 cards de Funcionalidades
+- [ ] Atualizar testes e push GitHub

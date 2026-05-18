@@ -34,6 +34,17 @@ const featureIcons: Record<string, typeof Users> = {
   Code2,
 };
 
+const featureImages: Record<string, string> = {
+  Users:
+    "https://d2xsxph8kpxj0f.cloudfront.net/310519663114999193/XQVbMfBibzKsrR55MZAsT4/feature_areas_virtuais-Avn7ryjSahbsuYURuCo7eS.webp",
+  GraduationCap:
+    "https://d2xsxph8kpxj0f.cloudfront.net/310519663114999193/XQVbMfBibzKsrR55MZAsT4/feature_trilha_aprendizado-bRb8JitMDERhjRG8MagtY5.webp",
+  Bot:
+    "https://d2xsxph8kpxj0f.cloudfront.net/310519663114999193/XQVbMfBibzKsrR55MZAsT4/feature_mentor_devsim-W2u2moTTRJcadvC9G7S7Sp.webp",
+  Code2:
+    "https://d2xsxph8kpxj0f.cloudfront.net/310519663114999193/XQVbMfBibzKsrR55MZAsT4/feature_verificador_codigo-2Wjsg7WzcmxN7dFvihQRPT.webp",
+};
+
 export default function Home() {
   const { isAuthenticated, logout } = useAuth();
   const [, setLocation] = useLocation();
@@ -47,18 +58,15 @@ export default function Home() {
       {/* Header */}
       <header className="sticky top-0 z-50 bg-background/95 backdrop-blur border-b border-border">
         <div className="container flex items-center justify-between h-16">
-          <a href="#top" className="flex items-center gap-2">
+          <a href="#top" className="flex items-center" aria-label="DevSim Studios">
             <img
               src="/manus-storage/pasted_file_db66k3_image_e35bcb12.png"
               alt="DevSim Studios"
-              className="w-8 h-8 object-contain"
+              className="h-12 md:h-14 w-auto object-contain"
             />
-            <span className="font-bold text-lg text-foreground">DevSim Studios</span>
           </a>
           <nav className="hidden md:flex items-center gap-7">
-            <a href="#about" className="text-sm text-muted-foreground hover:text-foreground transition">Sobre</a>
-            <a href="#mvv" className="text-sm text-muted-foreground hover:text-foreground transition">M.V.V.</a>
-            <a href="#team" className="text-sm text-muted-foreground hover:text-foreground transition">Equipe</a>
+            <a href="#about" className="text-sm text-muted-foreground hover:text-foreground transition">Quem somos</a>
             <a href="#product" className="text-sm text-muted-foreground hover:text-foreground transition">Produto</a>
             <a href="#access" className="text-sm text-muted-foreground hover:text-foreground transition">Acesso</a>
             <a href="#contact" className="text-sm text-muted-foreground hover:text-foreground transition">Contato</a>
@@ -191,37 +199,12 @@ export default function Home() {
                 </div>
               </Card>
             </div>
-            <Card className="p-8 bg-card border-border space-y-4">
-              <div className="flex items-center gap-3">
-                <img
-                  src="/manus-storage/pasted_file_db66k3_image_e35bcb12.png"
-                  alt="Logo DevSim"
-                  className="w-12 h-12 object-contain"
-                />
-                <div>
-                  <h3 className="font-bold text-lg text-foreground">{company.name}</h3>
-                  <p className="text-sm text-muted-foreground">Identidade da marca</p>
-                </div>
-              </div>
-              <p className="text-sm text-muted-foreground">
-                Nossa identidade combina o azul da confiança técnica com o ciano da curiosidade. O mascote{" "}
-                <strong className="text-foreground">Dev Sim</strong> traduz visualmente nosso método: tecnologia acessível,
-                acolhedora e sempre disponível para guiar o aluno.
-              </p>
-              <div className="grid grid-cols-3 gap-3 pt-2">
-                <div className="rounded-md bg-primary text-primary-foreground p-3 text-center text-xs font-semibold shadow">
-                  Primário
-                  <div className="font-mono text-[10px] mt-1 opacity-80">#2563EB</div>
-                </div>
-                <div className="rounded-md bg-cyan-500 text-white p-3 text-center text-xs font-semibold shadow">
-                  Acento
-                  <div className="font-mono text-[10px] mt-1 opacity-80">#06B6D4</div>
-                </div>
-                <div className="rounded-md bg-foreground text-background p-3 text-center text-xs font-semibold shadow">
-                  Neutro
-                  <div className="font-mono text-[10px] mt-1 opacity-80">#0F172A</div>
-                </div>
-              </div>
+            <Card className="p-8 bg-gradient-to-br from-primary/5 to-cyan-500/5 border-primary/20 flex items-center justify-center min-h-[280px]">
+              <img
+                src={MASCOT_IMAGE_URL}
+                alt="Mascote Dev Sim"
+                className="w-56 md:w-72 object-contain drop-shadow-xl"
+              />
             </Card>
           </div>
         </div>
@@ -295,18 +278,6 @@ export default function Home() {
             <p className="text-muted-foreground text-lg max-w-3xl mx-auto">{product.description}</p>
           </div>
 
-          {/* Logotipo do produto + tagline */}
-          <Card className="max-w-3xl mx-auto p-6 mb-12 flex flex-col sm:flex-row items-center gap-5 border-primary/30 bg-gradient-to-br from-primary/5 to-cyan-500/5">
-            <div className="shrink-0 w-20 h-20 rounded-2xl bg-gradient-to-br from-primary to-cyan-500 flex items-center justify-center text-white font-extrabold text-2xl shadow-lg">
-              {product.logoBadge}
-            </div>
-            <div className="text-center sm:text-left">
-              <p className="text-xs font-semibold text-primary uppercase tracking-wider mb-1">Logotipo do produto</p>
-              <h3 className="text-xl font-bold text-foreground">{product.shortName}</h3>
-              <p className="text-sm text-muted-foreground mt-1">{product.tagline}</p>
-            </div>
-          </Card>
-
           {/* Público-alvo */}
           <div className="max-w-4xl mx-auto mb-14">
             <h3 className="text-xl font-bold text-foreground mb-4 text-center">Para quem foi pensado</h3>
@@ -340,8 +311,13 @@ export default function Home() {
                     <h4 className="text-xl font-bold text-foreground">{f.title}</h4>
                     <p className="text-muted-foreground leading-relaxed">{f.description}</p>
                   </div>
-                  <Card className="p-8 bg-gradient-to-br from-primary/5 to-cyan-500/5 border-primary/20 min-h-[180px] flex items-center justify-center">
-                    <Icon className="w-24 h-24 text-primary/30" />
+                  <Card className="overflow-hidden bg-gradient-to-br from-primary/5 to-cyan-500/5 border-primary/20">
+                    <img
+                      src={featureImages[f.icon]}
+                      alt={f.title}
+                      loading="lazy"
+                      className="w-full h-auto object-cover aspect-[3/2]"
+                    />
                   </Card>
                 </div>
               );
