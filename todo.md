@@ -276,9 +276,9 @@
 
 
 ## Ajustes visuais (header, menu unificado, blocos removidos)
-- [ ] Logo maior no header (40-48px) sem label "DevSim Studios"
-- [ ] Unificar menu Sobre + M.V.V. + Equipe em "Quem somos" (ancoragem #quem-somos)
-- [ ] Remover bloco "Logotipo do Produto" da seção Produto
-- [ ] Remover bloco "Identidade da marca" (cores) da seção Sobre
-- [ ] Adicionar imagens reais para os 6 cards de Funcionalidades
-- [ ] Atualizar testes e push GitHub
+- [x] Logo maior no header (h-12/h-14) sem label "DevSim Studios"
+- [x] Unificar menu Sobre + M.V.V. + Equipe em "Quem somos" (ancoragem #about)
+- [x] Remover bloco "Logotipo do Produto" da seção Produto
+- [x] Remover bloco "Identidade da marca" (cores) da seção Sobre
+- [x] Adicionar imagens reais para os 4 cards de Funcionalidades (CDN webdev assets)
+- [x] Atualizar testes (116 passando) e push GitHub
